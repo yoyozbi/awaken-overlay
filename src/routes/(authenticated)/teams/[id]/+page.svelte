@@ -1,0 +1,15 @@
+<script lang="ts">
+    import type {ActionData, PageServerData } from "./$types";
+    import {Input, Button, Label, Fileupload,Alert} from "flowbite-svelte";
+    import TeamForm from "$lib/components/teamForm.svelte";
+    export let data: PageServerData;
+    export let form: ActionData;
+    $:{
+        if(form && "success" in form){
+            data.team = form?.newData;
+        }
+    }
+</script>
+
+
+<TeamForm data={data.team} form={form} />
