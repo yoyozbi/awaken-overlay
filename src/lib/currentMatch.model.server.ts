@@ -43,3 +43,28 @@ export const updateMatchTeams = async (id: string, team1Id: string, team2Id: str
         }
     });
 }
+export const updateMatch = async (id: string, team1Id: string, team2Id: string, team1Score: number, team2Score: number) : Promise<Prisma.CurrentMatchGetPayload<{include: {team1: true, team2: true}}>> => {
+    return await db.currentMatch.update({
+        where: {
+            id
+        },
+        data: {
+            team1: {
+                connect: {
+                    id: team1Id
+                }
+            },
+            team2: {
+                connect: {
+                    id: team2Id
+                }
+            },
+            team1Score,
+            team2Score
+        },
+        include: {
+            team1: true,
+            team2: true
+        }
+    });
+}
