@@ -1,14 +1,17 @@
-import db from '$lib/db.server';
-import { createHash } from 'crypto';
+import {hashSync, compareSync} from "bcrypt";
 import jwt from 'jsonwebtoken';
+import type { RequestEvent } from '@sveltejs/kit';
+import {json} from "@sveltejs/kit";
+
+import db from '$lib/db.server';
 import { JWT_ACCESS_SECRET } from '$env/static/private';
 
 const hashPassword = (password: string) : string => {
-	return createHash('sha256').update(password).digest('hex');
+	return hashSync(password, 10);
 };
 
 const compareHashPassword = (password: string, hashedPassword: string) : boolean => {
-	return hashPassword(password) === hashedPassword
+	return compareSync(password, hashedPassword);
 };
 
 export const LoginUser = async (
@@ -52,3 +55,54 @@ export const createUser = async (username: string, password: string) => {
 		return { error: 'Something went wrong' };
 	}
 };
+
+export const validateSession = async (authCookie: string) => {
+// Remove Bearer prefix
+
+	const token = authCookie.split(' ')[1];
+
+	try {
+		const jwtUser = jwt.verify(token, JWT_ACCESS_SECRET);
+
+		if (typeof jwtUser === 'string') {
+			return {error: 'Invalid token'}
+		}
+
+
+		const user = await db.user.findUnique({
+			where: {
+				id: jwtUser.id
+			}
+		});
+
+		if (!user) {
+			return {error: 'User not found'}
+		}
+
+		const sessionUser = {
+			id: user.id,
+			isAdmin: user.isAdmin,
+			username: user.username
+		};
+		return sessionUser;
+
+	} catch (error) {
+		console.error(error);
+	}
+}
+export const checkAuth = async (event: RequestEvent) => {
+    const authCookie = event.cookies.get('AuthorizationToken');
+    if(!authCookie) {
+        return json({"error": 'User not authenticated'}, {status: 401});
+    } 
+    if (authCookie) {
+        let session = await validateSession(authCookie);
+        if(!session) {
+            return json({"error": 'User not authenticated'}, {status: 401});
+        }
+        if("error" in session) {
+            return json({"error": session.error}, {status: 401});
+        }
+    }
+    return null;
+}

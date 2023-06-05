@@ -1,17 +1,11 @@
 <script lang="ts">
     import {Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Modal, Button} from "flowbite-svelte";
+    import type {Team} from "@prisma/client";
     import Time from "svelte-time"
-	type team = {
-		id: string;
-		name: string;
-		icon: string;
-		createdAt: Date;
-		updatedAt: Date;
-	};
-
-	export let teams: team[];
+	export let teams: Team[];
     let deleteModal = false;
     let teamId = "";
+
 </script>
 
 <Table striped={true}>
@@ -19,8 +13,8 @@
         <TableHeadCell>Team</TableHeadCell>
         <TableHeadCell>Left icon</TableHeadCell>
         <TableHeadCell>Right icon</TableHeadCell>
-        <TableHeadCell>Created At</TableHeadCell>
-        <TableHeadCell>Updated At</TableHeadCell>
+        <TableHeadCell>Created</TableHeadCell>
+        <TableHeadCell>Updated</TableHeadCell>
     </TableHead>
     <TableBody>
         {#each teams as team}
@@ -36,8 +30,8 @@
                  {:else}
                     <TableBodyCell><span class="italic">No icon</span></TableBodyCell>
                  {/if}
-                <TableBodyCell><Time timestamp={team.createdAt} /></TableBodyCell>
-                <TableBodyCell><Time timestamp={team.updatedAt} /></TableBodyCell>
+                <TableBodyCell><Time timestamp={team.createdAt} relative /></TableBodyCell>
+                <TableBodyCell><Time timestamp={team.updatedAt} relative /></TableBodyCell>
                 <TableBodyCell><a href="/teams/{team.id}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</a></TableBodyCell>
                 <TableBodyCell><a on:click={() => {deleteModal = true;teamId=team.id}} class="font-medium text-blue-600 hover:underline dark:text-blue-500">Delete</a></TableBodyCell>
             </TableBodyRow>

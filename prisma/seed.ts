@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import {createHash} from "crypto";
+import {hashSync} from "bcrypt";
 const prisma = new PrismaClient();
 const hashPassword = (password: string) : string => {
-	return createHash('sha256').update(password).digest('hex');
+	return hashSync(password, 10);
 };
 async function main() {
 	console.log('Start seeding ...');

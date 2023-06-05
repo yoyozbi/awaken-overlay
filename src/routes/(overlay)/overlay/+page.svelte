@@ -44,11 +44,23 @@
 			//console.log('[websocket] message received', event);
 			try {
 				const data = JSON.parse(event.data);
-				if (data.type === 'currentMatch') {
-					teams[0].icon = data.data.team1.leftIcon;
-					teams[0].score = data.data.team1Score;
-					teams[1].icon = data.data.team2.rightIcon;
-					teams[1].score = data.data.team2Score;
+				console.log(`[websocket] received:`, data)
+				switch(data.type) {
+					case 'currentMatch':
+						teams[0].icon = data.data.team1.leftIcon;
+						teams[0].score = data.data.team1Score;
+						teams[1].icon = data.data.team2.rightIcon;
+						teams[1].score = data.data.team2Score;
+				    break;
+					case "updateTeams":
+						teams[0].icon = data.data.team1.leftIcon;
+						teams[1].icon = data.data.team2.rightIcon;
+					break;
+					case "updateScore":
+						teams[0].score = data.data.team1Score;
+						teams[1].score = data.data.team2Score;
+					break;
+
 				}
 			} catch (e) {
 				//console.log(e);
@@ -58,81 +70,113 @@
 
 	onMount(() => {
 		establishWebSocket();
+		document.body.style = "margin: 0px; padding: 0px;";
 	});
 </script>
 
 <div id="container">
-	<div>
-		<img src={teams[0].icon} alt="Team 1 Logo" width="50px" height="50px" />
+<div class="scores">
+	<div class="image">
+		<img src={teams[0].icon} alt="Team 1 Logo"  />
 	</div>
-	<div>
+	<div class="score">
 		<p>{game1Score}</p>
 	</div>
-	<div id="timer">
+	<div class="timer">
 		<p>{timer}</p>
 	</div>
-	<div>
+	<div class="score">
 		<p>{game2Score}</p>
 	</div>
-	<div>
-		<img src={teams[1].icon} alt="Team 2 Logo" width="50px" height="50px" />
+	<div class="image">
+		<img src={teams[1].icon} alt="Team 2 Logo" />
 	</div>
 </div>
 <div class="bo-scores">
+	<div>
 	<div class="score-boxes">
 		{#each Array.from({ length: maxGames }, (_, index) => index) as game}
 			<div class="score-box {game < teams[0].score ? 'filled' : ''}" />
 		{/each}
 	</div>
-	<div><p>SPRING SPLIT - BO3</p></div>
+	<div class="text"><p>SPRING SPLIT - BO3</p></div>
 	<div class="score-boxes">
 		{#each Array.from({ length: maxGames }, (_, index) => index) as game}
 			<div class="score-box {game < teams[1].score ? 'filled' : ''}" />
 		{/each}
 	</div>
+	</div>
+</div>
 </div>
 
 <style>
+	.body {
+		margin:0px;
+		padding: 0px;
+	}
 	#container {
+		background-color: green;
 		font-family: 'Montserrat';
 		font-size: 40px;
-		display: flex;
-		height: 81px;
-		width: 100%;
+		width: fit-content;
+		padding: 0px;
+		margin: 0px;
 	}
-
-	#container > * {
-		font-weight: 700;
+	.scores {
+		display: flex;
+		background-color: white;
+	}
+	.scores > * {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		min-width: 79px;
-		max-width: 79px;
+		height: 82px;
 	}
-	#timer {
+	.scores > .score {
+		font-weight: 700;
+		min-width: 79px;
+	}
+	.scores > .timer {
 		color: white;
 		font-weight: 600;
 		min-width: 207px;
 		background-image: url('/timerBg.jpg');
 		background-repeat: no-repeat;
-		flex-grow: 2;
+	}
+	.scores > .image {
+		object-fit: cover;
 	}
 	.bo-scores {
 		display: flex;
-		justify-content: space-between;
+		justify-content: center;
 		align-items: center;
-		width: 400px;
 	}
+	.bo-scores > * {
+		padding: 0px;
+		background-color: white;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
 	.score-boxes {
 		display: flex;
 	}
+	.score-boxes > div:nth-child(1) {
+		margin-left: 5px;
+	}
+	.bo-scores  .text {
+		font-size: 10px;
+		margin-left: 100px;
+		margin-right: 100px;
+	}
 	.score-box {
-		width: 20px;
+		width: 60px;
 		height: 20px;
-		background-color: #ccc;
+		border: 4px solid black;
 		margin-right: 5px;
 	}
 	.filled {
-		background-color: green;
+		background-color: black;
 	}
 </style>

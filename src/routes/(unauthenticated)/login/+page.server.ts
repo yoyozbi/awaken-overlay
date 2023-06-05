@@ -7,9 +7,9 @@ import {fail, redirect} from "@sveltejs/kit";
 export const load: PageServerLoad = (event) => {
 	const user = event.locals.user;
 
-	/*if(user) {
+	if(user) {
 		throw redirect(302, '/')
-	}*/
+	}
 }
 
 export const actions: Actions = {

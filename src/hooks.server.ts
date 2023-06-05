@@ -1,47 +1,10 @@
 import type { Handle } from '@sveltejs/kit';
-import jwt from 'jsonwebtoken';
-import db from '$lib/db.server';
+import { validateSession } from '$lib/user.model.server';
 import { JWT_ACCESS_SECRET } from '$env/static/private';
 import { getCurrentMatch } from '$lib/currentMatch.model.server';
 import { building } from '$app/environment';
 import { GlobalThisWSS } from '$lib/server/webSocketUtils';
 import type { ExtendedGlobal } from '$lib/server/webSocketUtils';
-
-
-const validateSession = async (authCookie: string) => {
-// Remove Bearer prefix
-
-	const token = authCookie.split(' ')[1];
-
-	try {
-		const jwtUser = jwt.verify(token, JWT_ACCESS_SECRET);
-
-		if (typeof jwtUser === 'string') {
-			return {error: 'Invalid token'}
-		}
-
-
-		const user = await db.user.findUnique({
-			where: {
-				id: jwtUser.id
-			}
-		});
-
-		if (!user) {
-			return {error: 'User not found'}
-		}
-
-		const sessionUser = {
-			id: user.id,
-			isAdmin: user.isAdmin,
-			username: user.username
-		};
-		return sessionUser;
-
-	} catch (error) {
-		console.error(error);
-	}
-}
 
 // This can be extracted into a separate file
 let wssInitialized = false;
