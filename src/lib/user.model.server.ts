@@ -1,7 +1,15 @@
 import db from '$lib/db.server';
-import bcrypt from 'bcrypt';
+import { createHash } from 'crypto';
 import jwt from 'jsonwebtoken';
 import { JWT_ACCESS_SECRET } from '$env/static/private';
+
+const hashPassword = (password: string) : string => {
+	return createHash('sha256').update(password).digest('hex');
+};
+
+const compareHashPassword = (password: string, hashedPassword: string) : boolean => {
+	return hashPassword(password) === hashedPassword
+};
 
 export const LoginUser = async (
 	username: string,
@@ -13,7 +21,7 @@ export const LoginUser = async (
 		return { error: 'Invalid email or password' };
 	}
 
-	const passwordIsInvalid = await bcrypt.compare(password, user.password);
+	const passwordIsInvalid = compareHashPassword(password, user.password);
 
 	if (!passwordIsInvalid) {
 		return { error: 'Invalid email or password' };
@@ -34,7 +42,7 @@ export const createUser = async (username: string, password: string) => {
 		const newUser = await db.user.create({
 			data: {
 				username,
-				password: await bcrypt.hash(password, 10)
+				password: hashPassword(password)
 			}
 		});
 

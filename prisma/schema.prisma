@@ -20,7 +20,8 @@ model User {
 model Team {
   id           String        @id @default(uuid())
   name         String
-  icon         String
+  leftIcon     String        @default("")
+  rightIcon    String        @default("")
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   team1Matches CurrentMatch? @relation("Team1")

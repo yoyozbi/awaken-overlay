@@ -17,7 +17,8 @@
 <Table striped={true}>
     <TableHead>
         <TableHeadCell>Team</TableHeadCell>
-        <TableHeadCell>Icon</TableHeadCell>
+        <TableHeadCell>Left icon</TableHeadCell>
+        <TableHeadCell>Right icon</TableHeadCell>
         <TableHeadCell>Created At</TableHeadCell>
         <TableHeadCell>Updated At</TableHeadCell>
     </TableHead>
@@ -25,11 +26,16 @@
         {#each teams as team}
             <TableBodyRow>
                 <TableBodyCell>{team.name}</TableBodyCell>
-                {#if team.icon}
-                    <TableBodyCell><img src={team.icon} alt={`${team.name} logo`} /></TableBodyCell>
+                {#if team.leftIcon}
+                    <TableBodyCell><img src={team.leftIcon} alt={`left ${team.name}'s logo`} /></TableBodyCell>
                 {:else}
                     <TableBodyCell><span class="italic">No icon</span></TableBodyCell>
                 {/if}
+                {#if team.rightIcon}
+                    <TableBodyCell><img src={team.rightIcon} alt={`right ${team.name}'s  logo`} /></TableBodyCell>
+                 {:else}
+                    <TableBodyCell><span class="italic">No icon</span></TableBodyCell>
+                 {/if}
                 <TableBodyCell><Time timestamp={team.createdAt} /></TableBodyCell>
                 <TableBodyCell><Time timestamp={team.updatedAt} /></TableBodyCell>
                 <TableBodyCell><a href="/teams/{team.id}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</a></TableBodyCell>
