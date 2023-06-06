@@ -13,7 +13,6 @@ export const POST = (async (event) => {
 		return authError;
 	}
 	const data = await event.request.json();
-	console.log(data);
 	if (!data) {
 		return json({ error: 'No data provided' }, { status: 400 });
 	}
