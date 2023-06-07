@@ -37,7 +37,7 @@ export const actions = {
 			});
 			const rightAll = `data:${rightFile.type};base64,${rightBase64}`;
 			await createTeam(name, leftAll, rightAll);
-			throw redirect(302, '/');
+			throw redirect(302, '/admin');
 		} else {
 			return fail(400, { error: 'Missing icon' });
 		}

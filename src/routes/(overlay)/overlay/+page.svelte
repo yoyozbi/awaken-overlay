@@ -1,21 +1,30 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { type Team, Prisma } from '@prisma/client';
 	import { gameStore } from '$lib/stores/gameStore';
-	import { establishWebSocket } from '$lib/overlay/svelteWebsocket';
+	import { trpc } from '$lib/trpc/client';
 	import { handleWs } from '$lib/overlay/rlWebsocket';
 	import Timer from '$lib/components/timer.svelte';
+	import type { CurrentMatchWithTeams } from '$lib/currentMatch.model.server';
 
 	let maxGames = 3;
 
-	let log: string[] = [];
+	const client = trpc();
 
-	const logEvent = (str: string) => {
-		log = [...log, str];
+	const updateStore = (newData: Omit<CurrentMatchWithTeams, 'createdAt' | 'updatedAt'>) => {
+		$gameStore.serie.team1Score = newData.team1Score;
+		$gameStore.serie.team2Score = newData.team2Score;
+		$gameStore.icons.team1 = newData.team1.leftIcon;
+		$gameStore.icons.team2 = newData.team2.rightIcon;
 	};
+	onMount(async () => {
+		const newData = await client.getCurrentMatch.query();
+		updateStore(newData);
 
-	onMount(() => {
-		establishWebSocket(gameStore);
+		client.currentTeamUpdate.subscribe(undefined, {
+			onData(newData) {
+				updateStore(newData);
+			}
+		});
 		handleWs(gameStore);
 		document.body.style.padding = '0px';
 		document.body.style.margin = '0px';

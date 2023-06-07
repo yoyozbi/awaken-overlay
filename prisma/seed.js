@@ -1,7 +1,12 @@
 import { PrismaClient } from '@prisma/client';
-import {hashSync} from "bcrypt";
+import { hashSync } from 'bcrypt';
 const prisma = new PrismaClient();
-const hashPassword = (password: string) : string => {
+/**
+ *
+ * @param {string} password
+ * @returns {string}
+ */
+const hashPassword = (password) => {
 	return hashSync(password, 10);
 };
 async function main() {
@@ -23,7 +28,7 @@ async function main() {
 			data: {
 				name: 'Solid',
 				leftIcon: '',
-				rightIcon: '',
+				rightIcon: ''
 			}
 		});
 		const aopik = await prisma.team.create({
