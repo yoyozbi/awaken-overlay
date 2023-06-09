@@ -82,6 +82,9 @@ devDependencies:
   autoprefixer:
     specifier: ^10.4.14
     version: 10.4.14(postcss@8.4.23)
+  dotenv:
+    specifier: ^16.1.4
+    version: 16.1.4
   eslint:
     specifier: ^8.28.0
     version: 8.40.0
@@ -1424,6 +1427,11 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       esutils: 2.0.3
+    dev: true
+
+  /dotenv@16.1.4:
+    resolution: {integrity: sha512-m55RtE8AsPeJBpOIFKihEmqUcoVncQIwo7x9U8ZwLEZw9ZpXboz2c+rvog+jUaJvVrZ5kBOeYQBX5+8Aa/OZQw==}
+    engines: {node: '>=12'}
     dev: true
 
   /ecdsa-sig-formatter@1.0.11:

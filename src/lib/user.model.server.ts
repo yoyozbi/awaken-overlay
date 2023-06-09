@@ -2,7 +2,7 @@ import { hashSync, compareSync } from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import db from '$lib/db.server';
-import { JWT_ACCESS_SECRET } from '$env/dynamic/private';
+import { env } from '$env/dynamic/private';
 import type { IncomingMessage } from 'http';
 import type { User } from '@prisma/client';
 
@@ -32,7 +32,7 @@ export const LoginUser = async (
 
 	const jwtUser = { id: user.id, username: user.username };
 
-	const token = jwt.sign(jwtUser, JWT_ACCESS_SECRET, { expiresIn: '1d' });
+	const token = jwt.sign(jwtUser, env.JWT_ACCESS_SECRET, { expiresIn: '1d' });
 	return { token };
 };
 
@@ -73,7 +73,7 @@ export const checkSession = async (
 	if (!authCookie) return;
 
 	const token = decodeURIComponent(authCookie).split(' ')[1];
-	const jwtUser = jwt.verify(token, JWT_ACCESS_SECRET);
+	const jwtUser = jwt.verify(token, env.JWT_ACCESS_SECRET);
 
 	if (typeof jwtUser === 'string') return;
 
@@ -92,7 +92,7 @@ export const validateSession = async (authCookie: string) => {
 	const token = authCookie.split(' ')[1];
 
 	try {
-		const jwtUser = jwt.verify(token, JWT_ACCESS_SECRET);
+		const jwtUser = jwt.verify(token, env.JWT_ACCESS_SECRET);
 
 		if (typeof jwtUser === 'string') {
 			return { error: 'Invalid token' };
