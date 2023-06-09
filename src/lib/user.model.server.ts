@@ -2,7 +2,7 @@ import { hashSync, compareSync } from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import db from '$lib/db.server';
-import { JWT_ACCESS_SECRET } from '$env/static/private';
+import { JWT_ACCESS_SECRET } from '$env/dynamic/private';
 import type { IncomingMessage } from 'http';
 import type { User } from '@prisma/client';
 
