@@ -1,7 +1,7 @@
 <script>
-    import "../../app.postcss"
+	import '../../app.postcss';
 </script>
+
 <body class="bg-slate-800">
-    
-<slot></slot>
+	<slot />
 </body>

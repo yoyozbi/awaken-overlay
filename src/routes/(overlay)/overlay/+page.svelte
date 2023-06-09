@@ -2,13 +2,14 @@
 	import { onMount } from 'svelte';
 	import { gameStore } from '$lib/stores/gameStore';
 	import { trpc } from '$lib/trpc/client';
-	import { handleWs } from '$lib/overlay/rlWebsocket';
+	import { SosWebSocket } from '$lib/sos/client';
 	import Timer from '$lib/components/timer.svelte';
 	import type { CurrentMatchWithTeams } from '$lib/currentMatch.model.server';
 
 	let maxGames = 3;
 
 	const client = trpc();
+	let ws: SosWebSocket;
 
 	const updateStore = (newData: Omit<CurrentMatchWithTeams, 'createdAt' | 'updatedAt'>) => {
 		$gameStore.serie.team1Score = newData.team1Score;
@@ -17,6 +18,12 @@
 		$gameStore.icons.team2 = newData.team2.rightIcon;
 	};
 	onMount(async () => {
+		ws = new SosWebSocket();
+		ws.subscribe('game:update_state', (data) => {
+			$gameStore.game.timeLeft = data.game.time_seconds;
+			$gameStore.game.team1Score = data.game.teams[0].score;
+			$gameStore.game.team2Score = data.game.teams[1].score;
+		});
 		const newData = await client.getCurrentMatch.query();
 		updateStore(newData);
 
@@ -25,7 +32,6 @@
 				updateStore(newData);
 			}
 		});
-		handleWs(gameStore);
 		document.body.style.padding = '0px';
 		document.body.style.margin = '0px';
 	});

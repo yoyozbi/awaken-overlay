@@ -2,6 +2,7 @@
 import type { Context } from '$lib/trpc/context';
 import { observable } from '@trpc/server/observable';
 import { TRPCError, initTRPC } from '@trpc/server';
+import { type ObjectSchema, object, string, number } from 'yup';
 import { EventEmitter } from 'events';
 import {
 	getCurrentMatch,
@@ -10,7 +11,14 @@ import {
 } from '$lib/currentMatch.model.server';
 import type { CurrentMatch } from '@prisma/client';
 
-type currentMatchUpdate = Omit<CurrentMatch, 'createdAt' | 'updateAt'>;
+type currentMatchUpdate = Omit<CurrentMatch, 'createdAt' | 'updatedAt'>;
+const currentMatchUpdateSchema: ObjectSchema<currentMatchUpdate> = object({
+	id: string().required(),
+	team1Id: string().required(),
+	team2Id: string().required(),
+	team1Score: number().required(),
+	team2Score: number().required()
+});
 
 export const t = initTRPC.context<Context>().create();
 
@@ -36,16 +44,12 @@ export const router = t.router({
 	updateCurrentMatch: t.procedure
 		.input((input: unknown) => {
 			if (typeof input !== 'object') throw new Error('Invalid input');
-			if (
-				input &&
-				'id' in input &&
-				'team1Id' in input &&
-				'team2Id' in input &&
-				'team1Score' in input &&
-				'team2Score' in input
-			)
-				return input;
-			throw new Error('Invalid input');
+			try {
+				const i = currentMatchUpdateSchema.validateSync(input);
+				return i;
+			} catch (e) {
+				throw new Error('Invalid input');
+			}
 		})
 		.mutation(async ({ input }) => {
 			const i = input as unknown as currentMatchUpdate;

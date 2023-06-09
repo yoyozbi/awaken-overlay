@@ -3,8 +3,8 @@ import { redirect } from '@sveltejs/kit';
 
 export const load: LayoutServerLoad = (event) => {
 	const user = event.locals.user;
-	if (!user) {
-		throw redirect(301, '/login');
+	if (!user || !user.isAdmin) {
+		throw redirect(302, '/login');
 	}
 	return {
 		user

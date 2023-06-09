@@ -11,7 +11,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const authCookie = event.cookies.get('AuthorizationToken');
 
 	if (authCookie) {
-		let session = await validateSession(authCookie);
+		const session = await validateSession(authCookie);
 		if (!session) {
 			throw new Error('User not authenticated');
 		}
@@ -20,6 +20,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 
 		event.locals.user = session;
+		console.log(event.locals.user);
 	}
 	return resolve(event);
 };

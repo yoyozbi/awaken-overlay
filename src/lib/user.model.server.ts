@@ -1,11 +1,10 @@
 import { hashSync, compareSync } from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import type { RequestEvent } from '@sveltejs/kit';
-import { json } from '@sveltejs/kit';
 
 import db from '$lib/db.server';
 import { JWT_ACCESS_SECRET } from '$env/static/private';
 import type { IncomingMessage } from 'http';
+import type { User } from '@prisma/client';
 
 const hashPassword = (password: string): string => {
 	return hashSync(password, 10);
@@ -37,7 +36,7 @@ export const LoginUser = async (
 	return { token };
 };
 
-export const createUser = async (username: string, password: string) => {
+export const createUser = async (username: string, password: string, isAdmin = false) => {
 	const user = await db.user.findUnique({ where: { username } });
 	if (user) {
 		return { error: 'User already exists' };
@@ -46,7 +45,8 @@ export const createUser = async (username: string, password: string) => {
 		const newUser = await db.user.create({
 			data: {
 				username,
-				password: hashPassword(password)
+				password: hashPassword(password),
+				isAdmin
 			}
 		});
 
@@ -55,6 +55,11 @@ export const createUser = async (username: string, password: string) => {
 		console.error(error);
 		return { error: 'Something went wrong' };
 	}
+};
+
+export const getUserById = async (userId: string) => {
+	const user = await db.user.findUnique({ where: { id: userId } });
+	return user;
 };
 
 export const checkSession = async (
@@ -84,7 +89,6 @@ export const checkSession = async (
 
 export const validateSession = async (authCookie: string) => {
 	// Remove Bearer prefix
-
 	const token = authCookie.split(' ')[1];
 
 	try {
@@ -114,19 +118,45 @@ export const validateSession = async (authCookie: string) => {
 		console.error(error);
 	}
 };
-export const checkAuth = async (event: RequestEvent) => {
-	const authCookie = event.cookies.get('AuthorizationToken');
-	if (!authCookie) {
-		return json({ error: 'User not authenticated' }, { status: 401 });
+export const getUsers = async () => {
+	const users = await db.user.findMany();
+	return users;
+};
+export const updateUser = async (
+	userId: string,
+	username: string,
+	isAdmin: boolean,
+	password?: string
+): Promise<{ error: string } | { success: true; newData: User }> => {
+	const user = await db.user.findUnique({ where: { id: userId } });
+	if (!user) {
+		return { error: 'User not found' };
 	}
-	if (authCookie) {
-		let session = await validateSession(authCookie);
-		if (!session) {
-			return json({ error: 'User not authenticated' }, { status: 401 });
-		}
-		if ('error' in session) {
-			return json({ error: session.error }, { status: 401 });
-		}
+	try {
+		const updatedUser = await db.user.update({
+			where: {
+				id: userId
+			},
+			data: {
+				username,
+				isAdmin,
+				password: password ? hashPassword(password) : undefined
+			}
+		});
+		return { success: true, newData: updatedUser };
+	} catch (error) {
+		console.error(error);
+		return { error: 'Something went wrong' };
 	}
-	return null;
+};
+
+export const deleteUser = async (
+	userId: string
+): Promise<{ error: string } | { success: true }> => {
+	const user = await db.user.findUnique({ where: { id: userId } });
+	if (!user) {
+		return { error: 'User not found' };
+	}
+	await db.user.delete({ where: { id: userId } });
+	return { success: true };
 };

@@ -4,15 +4,16 @@ import { getTeams, deleteTeam } from '$lib/team.model.server';
 import {
 	getCurrentMatch,
 	updateMatchScore,
-	updateMatchTeams
+	updateMatchTeams,
+	type CurrentMatchWithTeams
 } from '$lib/currentMatch.model.server';
-import type { CurrentMatch, Team } from '@prisma/client';
+import type { Team } from '@prisma/client';
 
 export const load = (async (event) => {
 	return {
 		currentMatch: await getCurrentMatch(),
 		teams: await getTeams()
-	} satisfies { currentMatch: CurrentMatch | null; teams: Team[] };
+	} satisfies { currentMatch: CurrentMatchWithTeams; teams: Team[] };
 }) satisfies PageServerLoad;
 
 export const actions = {
