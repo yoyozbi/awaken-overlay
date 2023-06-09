@@ -14,6 +14,11 @@
 	setContext('currentMatch', currentMatch);
 
 	const client = trpc();
+	const handleTeamUpdate = async () => {
+		$currentMatch.team1Score = 0;
+		$currentMatch.team2Score = 0;
+		await handleUpdate();
+	};
 
 	const handleUpdate = async () => {
 		await client.updateCurrentMatch.mutate($currentMatch);
@@ -22,5 +27,5 @@
 
 <div>
 	<ScoreUpdate on:scoreUpdate={handleUpdate} />
-	<TeamUpdate teams={data.teams} on:teamUpdate={handleUpdate} />
+	<TeamUpdate teams={data.teams} on:teamUpdate={handleTeamUpdate} />
 </div>

@@ -20,7 +20,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 
 		event.locals.user = session;
-		console.log(event.locals.user);
 	}
 	return resolve(event);
 };
