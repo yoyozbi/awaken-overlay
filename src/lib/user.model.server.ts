@@ -1,5 +1,6 @@
 import { hashSync, compareSync } from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import type { JwtPayload } from 'jsonwebtoken';
 
 import db from '$lib/db.server';
 import { env } from '$env/dynamic/private';
@@ -73,7 +74,13 @@ export const checkSession = async (
 	if (!authCookie) return;
 
 	const token = decodeURIComponent(authCookie).split(' ')[1];
-	const jwtUser = jwt.verify(token, env.JWT_ACCESS_SECRET);
+	let jwtUser: string | JwtPayload;
+	try {
+		jwtUser = jwt.verify(token, env.JWT_ACCESS_SECRET);
+	} catch (error) {
+		console.error(error);
+		return;
+	}
 
 	if (typeof jwtUser === 'string') return;
 

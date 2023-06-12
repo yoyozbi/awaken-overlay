@@ -116,6 +116,8 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		padding-top: 4px;
+		padding-bottom: 4px;
 	}
 
 	.score-boxes {
