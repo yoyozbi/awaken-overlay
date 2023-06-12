@@ -127,14 +127,15 @@
 		margin-left: 5px;
 	}
 	.bo-scores .text {
-		font-size: 10px;
-		margin-left: 100px;
-		margin-right: 100px;
+		font-weight: bold;
+		font-size: 13px;
+		margin-left: 60px;
+		margin-right: 60px;
 	}
 	.score-box {
 		width: 60px;
 		height: 20px;
-		border: 4px solid black;
+		border: 3px solid black;
 		margin-right: 5px;
 	}
 	.filled {
