@@ -2,7 +2,7 @@ FROM node:18.16-alpine AS build
 
 WORKDIR /app
 
-RUN apk add --no-cache curl libc6-compat
+RUN apk add --no-cache curl libc6-compat python3
 
 RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 
