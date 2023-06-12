@@ -7,6 +7,7 @@ export const load: LayoutServerLoad = (event) => {
 		throw redirect(301, '/login');
 	}
 	return {
-		user
+		user,
+		displayNav: !event.request.url.includes('?navbar=false')
 	};
 };

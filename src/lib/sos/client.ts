@@ -26,14 +26,29 @@ export class SosWebSocket {
 	private socket: WebSocket;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private subscribers: Subscriber<any>[] = [];
+	private isConnected: boolean;
 
 	constructor(port = 49122) {
+		this.isConnected = false;
+		this.init(port);
+	}
+	private init(port: number) {
 		this.socket = new WebSocket(`ws://localhost:${port}`);
 		this.socket.onopen = () => {
 			console.log('WebSocket Client Connected');
+			this.isConnected = true;
 		};
 		this.socket.onclose = () => {
+			this.isConnected = false;
 			console.log('WebSocket Client Disconnected');
+			console.log('Retrying connection in 1 second');
+			const timeout = setTimeout(() => {
+				if (this.isConnected) {
+					clearTimeout(timeout);
+					return;
+				}
+				this.init(port);
+			}, 1000);
 		};
 		this.socket.onmessage = (e) => {
 			try {

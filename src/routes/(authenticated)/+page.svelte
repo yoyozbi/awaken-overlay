@@ -2,7 +2,7 @@
 	import type { PageServerData } from './$types';
 	import { currentMatch } from '$lib/stores/currentMatchStore';
 	import ScoreUpdate from '$lib/components/scoreUpdate.svelte';
-	import TeamUpdate from '$lib/components/teamUpdate.svelte';
+	import TeamUpdate from '$lib/components/teamSelect.svelte';
 	import { setContext } from 'svelte';
 	import { trpc } from '$lib/trpc/client';
 
@@ -14,11 +14,6 @@
 	setContext('currentMatch', currentMatch);
 
 	const client = trpc();
-	const handleTeamUpdate = async () => {
-		$currentMatch.team1Score = 0;
-		$currentMatch.team2Score = 0;
-		await handleUpdate();
-	};
 
 	const handleUpdate = async () => {
 		await client.updateCurrentMatch.mutate($currentMatch);
@@ -26,6 +21,5 @@
 </script>
 
 <div>
-	<ScoreUpdate on:scoreUpdate={handleUpdate} />
-	<TeamUpdate teams={data.teams} on:teamUpdate={handleTeamUpdate} />
+	<ScoreUpdate on:scoreUpdate={handleUpdate} teams={data.teams} />
 </div>
