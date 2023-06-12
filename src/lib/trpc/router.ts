@@ -1,7 +1,7 @@
 // lib/trpc/router.ts
 import type { Context } from '$lib/trpc/context';
 import { observable } from '@trpc/server/observable';
-import { TRPCError, initTRPC } from '@trpc/server';
+import { initTRPC } from '@trpc/server';
 import { type ObjectSchema, object, string, number } from 'yup';
 import { EventEmitter } from 'events';
 import {

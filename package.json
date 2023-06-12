@@ -1,14 +1,14 @@
 {
 	"name": "awaken-overlay",
 	"version": "0.0.1",
-	"private": true,
+	"license": "GPL-3.0-only",
 	"scripts": {
 		"start": "npm-run-all db:migrate db:seed svelte:start",
 		"db:seed": "npx prisma db seed",
 		"db:migrate": "node scripts/check-db.js",
 		"svelte:start": "node ./wsServer.js",
 		"dev": "vite dev",
-		"build": "npm-run-all build:*",
+		"build": "npm-run-all build:vite",
 		"build:vite": "vite build",
 		"build:db-client": "prisma generate",
 		"preview": "vite preview",
