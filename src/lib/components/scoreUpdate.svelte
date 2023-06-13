@@ -9,13 +9,21 @@
 
 	const dispatch = createEventDispatcher<{ scoreUpdate: typeof $currentMatch }>();
 
-	const namesUpdate = (team1Id: string) => {
+	const names1Update = (team1Id: string) => {
+		$currentMatch.team1Score = 0;
+		$currentMatch.team2Score = 0;
+
 		$currentMatch.team1Id = team1Id;
 		dispatch('scoreUpdate', $currentMatch);
 	};
-	const team1Update = (toAdd: number) => {
+	const names2Update = (team2Id: string) => {
 		$currentMatch.team1Score = 0;
 		$currentMatch.team2Score = 0;
+
+		$currentMatch.team2Id = team2Id;
+		dispatch('scoreUpdate', $currentMatch);
+	};
+	const team1Update = (toAdd: number) => {
 		if ($currentMatch.team1Score + toAdd < 0) {
 			return;
 		}
@@ -23,8 +31,6 @@
 		dispatch('scoreUpdate', $currentMatch);
 	};
 	const team2Update = (toAdd: number) => {
-		$currentMatch.team1Score = 0;
-		$currentMatch.team2Score = 0;
 		if ($currentMatch.team2Score + toAdd < 0) {
 			return;
 		}
@@ -47,7 +53,7 @@
 				{teams}
 				selectedTeam={$currentMatch.team1Id}
 				on:teamUpdate={(e) => {
-					namesUpdate(e.detail);
+					names1Update(e.detail);
 				}}
 				class="mt-5 max-w-12"
 			/>
@@ -60,7 +66,7 @@
 				{teams}
 				selectedTeam={$currentMatch.team2Id}
 				on:teamUpdate={(e) => {
-					namesUpdate(e.detail);
+					names2Update(e.detail);
 				}}
 				class="mt-5"
 			/>
