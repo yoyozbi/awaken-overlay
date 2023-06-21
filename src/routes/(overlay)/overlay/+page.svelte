@@ -6,7 +6,7 @@
 	import Timer from '$lib/components/timer.svelte';
 	import type { CurrentMatchWithTeams } from '$lib/currentMatch.model.server';
 
-	let maxGames = 3;
+	let maxGames = 4;
 
 	const client = trpc();
 	let ws: SosWebSocket;
@@ -62,7 +62,7 @@
 					<div class="score-box {game < $gameStore.serie.team1Score ? 'filled' : ''}" />
 				{/each}
 			</div>
-			<div class="text"><p>SPRING SPLIT - BO3</p></div>
+			<div class="text"><p>SPRING SPLIT PLAYOFFS - BO7</p></div>
 			<div class="score-boxes">
 				{#each Array.from({ length: maxGames }, (_, index) => index) as game}
 					<div class="score-box {game < $gameStore.serie.team2Score ? 'filled' : ''}" />

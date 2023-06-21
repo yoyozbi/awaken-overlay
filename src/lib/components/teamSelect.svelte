@@ -24,7 +24,7 @@
 </script>
 
 <Select
-	class={`${$$props.class}`}
+	class={`dark:text-white dark:focus:border-white dark:focus:bg-black`}
 	items={formatedTeams}
 	bind:value={selectedTeam}
 	on:change={handleChange}
