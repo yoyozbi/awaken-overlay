@@ -1,5 +1,5 @@
 import type { Actions } from './$types';
-import { createUser } from '$lib/user.model.server';
+import { auth } from '$lib/server/lucia';
 import { fail, redirect } from '@sveltejs/kit';
 import { object, type ObjectSchema, string, ValidationError } from 'yup';
 
@@ -31,13 +31,24 @@ export const actions = {
 		}
 		let isAdmin = false;
 		if ('isAdmin' in data) isAdmin = true;
-		const res = await createUser(data.username, data.password, isAdmin);
-		if ('error' in res) {
-			if (res.error) {
-				return fail(400, { error: res.error });
-			}
-			return fail(400, { error: 'Unknown error while creating user' });
+		try {
+			await auth.createUser({
+				primaryKey: {
+					providerId: 'username',
+					providerUserId: data.username,
+					password: data.password
+				},
+				attributes: {
+					isAdmin,
+					username: data.username,
+					createdAt: new Date(Date.now()),
+					updatedAt: new Date(Date.now())
+				}
+			});
+		} catch (e) {
+			return fail(400, { error: e });
 		}
+
 		throw redirect(301, `/admin/`);
 	}
 } satisfies Actions;

@@ -2,6 +2,6 @@
 	import '../../app.postcss';
 </script>
 
-<body class="bg-slate-800">
+<body class="dark:bg-slate-900 min-w-screen min-h-screen">
 	<slot />
 </body>
