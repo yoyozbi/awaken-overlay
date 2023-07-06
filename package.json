@@ -52,6 +52,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@auth/core": "^0.9.0",
+		"@auth/sveltekit": "^0.3.3",
 		"@popperjs/core": "^2.11.7",
 		"@prisma/client": "^4.15.0",
 		"@trpc/client": "^10.29.1",

@@ -1,9 +1,11 @@
-import type { Handle } from '@sveltejs/kit';
+import {type Handle, sequence } from '@sveltejs/kit';
 import { validateSession } from '$lib/user.model.server';
 import { createContext } from '$lib/trpc/context';
 import { router } from '$lib/trpc/router';
 import { createTRPCWebSocketServer } from 'trpc-sveltekit/websocket';
 import { building } from '$app/environment';
+import {SvelteKitAuth} from "@auth/sveltekit";
+import Credentials from "@auth/core/providers/credentials"
 
 if (!building) createTRPCWebSocketServer({ router, createContext });
 
@@ -23,3 +25,5 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 	return resolve(event);
 };
+
+export const handle = 
