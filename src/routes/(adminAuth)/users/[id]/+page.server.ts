@@ -1,8 +1,9 @@
 import { auth } from '$lib/server/lucia';
 import db from '$lib/db.server';
-import type { PageServerLoad } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 
-import { error } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
+import { object, string, type ObjectSchema, ValidationError, boolean } from 'yup';
 
 export const load = (async ({ params }) => {
 	const { id } = params;
@@ -19,3 +20,50 @@ export const load = (async ({ params }) => {
 		loginAttempts
 	};
 }) satisfies PageServerLoad;
+
+type userUpdate = {
+	username: string;
+	isAdmin?: string;
+};
+const userUpdateSchema: ObjectSchema<userUpdate> = object({
+	username: string().required(),
+	isAdmin: string().optional()
+});
+
+export const actions = {
+	default: async ({ params, request, locals }) => {
+		const { id } = params;
+		if (!id) {
+			throw error(404, 'missing id');
+		}
+		const local = await auth.getUser(id);
+		if (!local) {
+			throw error(404, 'Not found');
+		}
+		const formData = await request.formData();
+
+		let data: userUpdate;
+
+		try {
+			data = await userUpdateSchema.validate(Object.fromEntries(formData));
+		} catch (e) {
+			if (e instanceof ValidationError) {
+				if (e.errors.length > 0) {
+					return fail(400, { error: e.errors.join(', ') });
+				}
+				return fail(400, { error: 'Unknown data error' });
+			}
+			return fail(400, { error: 'Unknown error' });
+		}
+		const isAdmin = data.isAdmin === 'true';
+
+		const { user } = await locals.auth.validateUser();
+		if (!user) return fail(400, { error: 'Not logged in' });
+		const nData = await auth.updateUserAttributes(id, {
+			username: data.username,
+			isAdmin
+		});
+
+		return { data: nData };
+	}
+} satisfies Actions;
