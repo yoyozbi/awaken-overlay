@@ -3,7 +3,7 @@ import db from '$lib/db.server';
 import type { Actions, PageServerLoad } from './$types';
 
 import { error, fail } from '@sveltejs/kit';
-import { object, string, type ObjectSchema, ValidationError, boolean } from 'yup';
+import { object, string, type ObjectSchema, ValidationError } from 'yup';
 
 export const load = (async ({ params }) => {
 	const { id } = params;

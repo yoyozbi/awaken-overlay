@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { enhance, applyAction } from '$app/forms';
+	import { enhance } from '$app/forms';
 	import { slide } from 'svelte/transition';
 	import type { ActionData, PageServerData } from './$types';
 	import {
