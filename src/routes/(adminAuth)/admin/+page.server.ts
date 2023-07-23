@@ -2,11 +2,12 @@ import type { PageServerLoad, Actions } from './$types';
 import { getTeams } from '$lib/team.model.server';
 import { object, string, type InferType } from 'yup';
 import { fail } from '@sveltejs/kit';
-import { deleteUser, getUsers } from '$lib/user.model.server';
+import db from '$lib/db.server';
+import { auth } from '$lib/server/lucia';
 
 export const load = (async () => {
 	const teams = await getTeams();
-	const users = await getUsers();
+	const users = await db.authUser.findMany();
 	return {
 		teams,
 		users
@@ -26,10 +27,7 @@ export const actions = {
 		} catch (e) {
 			return fail(400, { error: 'Missing userId' });
 		}
-		const res = await deleteUser(data.userId);
-		if ('error' in res) return fail(400, { error: res.error });
 
-		const newData = await getUsers();
-		return { success: true, newData: { users: newData } };
+		await auth.deleteUser(data.userId);
 	}
 } satisfies Actions;

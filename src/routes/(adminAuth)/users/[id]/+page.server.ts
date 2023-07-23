@@ -1,44 +1,51 @@
-import { fail, redirect, error } from '@sveltejs/kit';
-import type { PageServerLoad, Actions } from './$types';
-import { getUserById, updateUser } from '$lib/user.model.server';
-import { type ObjectSchema, object, string, ValidationError } from 'yup';
+import { auth } from '$lib/server/lucia';
+import db from '$lib/db.server';
+import type { Actions, PageServerLoad } from './$types';
+
+import { error, fail } from '@sveltejs/kit';
+import { object, string, type ObjectSchema, ValidationError } from 'yup';
 
 export const load = (async ({ params }) => {
 	const { id } = params;
 	if (!id) {
 		throw error(404, 'missing id');
 	}
-
-	const user = await getUserById(id);
+	const user = await auth.getUser(id);
 	if (!user) {
 		throw error(404, 'Not found');
 	}
+	const loginAttempts = await db.loginAttemps.findMany({ where: { user: { id } } });
 	return {
-		user
+		user,
+		loginAttempts
 	};
 }) satisfies PageServerLoad;
 
 type userUpdate = {
 	username: string;
 	isAdmin?: string;
-	password?: string;
 };
 const userUpdateSchema: ObjectSchema<userUpdate> = object({
 	username: string().required(),
-	isAdmin: string().optional(),
-	password: string().optional()
+	isAdmin: string().optional()
 });
 
-export const actions: Actions = {
-	default: async (event) => {
-		const { id } = event.params;
+export const actions = {
+	default: async ({ params, request, locals }) => {
+		const { id } = params;
 		if (!id) {
 			throw error(404, 'missing id');
 		}
-		const formData = Object.fromEntries(await event.request.formData());
+		const local = await auth.getUser(id);
+		if (!local) {
+			throw error(404, 'Not found');
+		}
+		const formData = await request.formData();
+
 		let data: userUpdate;
+
 		try {
-			data = await userUpdateSchema.validate(formData);
+			data = await userUpdateSchema.validate(Object.fromEntries(formData));
 		} catch (e) {
 			if (e instanceof ValidationError) {
 				if (e.errors.length > 0) {
@@ -46,15 +53,17 @@ export const actions: Actions = {
 				}
 				return fail(400, { error: 'Unknown data error' });
 			}
-			return fail(400, { error: 'Unknwon error' });
+			return fail(400, { error: 'Unknown error' });
 		}
-		let isAdmin = false;
-		if ('isAdmin' in data) isAdmin = true;
+		const isAdmin = data.isAdmin === 'true';
 
-		const res = await updateUser(id, data.username, isAdmin, data.password);
-		if ('error' in res) {
-			return fail(400, { error: res.error });
-		}
-		throw redirect(301, `/admin/`);
+		const { user } = await locals.auth.validateUser();
+		if (!user) return fail(400, { error: 'Not logged in' });
+		const nData = await auth.updateUserAttributes(id, {
+			username: data.username,
+			isAdmin
+		});
+
+		return { data: nData };
 	}
 } satisfies Actions;
