@@ -7,7 +7,7 @@
 	export let form: ActionData;
 </script>
 
-<div class="flex justify-center items-center w-screen h-screen bg-slate-800">
+<div class="flex justify-center items-center w-screen h-screen dark:bg-slate-900">
 	<form method="POST" use:enhance>
 		<Input type="text" id="username" name="username" placeholder="username" required />
 		<Input

@@ -1,18 +1,22 @@
-import { NODE_ENV } from '$env/static/private';
 import type { Actions, PageServerLoad } from './$types';
-import { LoginUser } from '$lib/user.model.server';
 import { fail, redirect } from '@sveltejs/kit';
+import { auth } from '$lib/server/lucia';
+import db from '$lib/db.server';
 
-export const load: PageServerLoad = (event) => {
-	const user = event.locals.user;
+export const load: PageServerLoad = async (event) => {
+	const { session } = await event.locals.auth.validateUser();
 
-	if (user) {
+	if (session) {
 		throw redirect(302, '/');
 	}
 };
 
 export const actions: Actions = {
 	default: async (event) => {
+		let userAgent = event.request.headers.get('user-agent');
+		userAgent = userAgent ? userAgent : 'Unknown';
+		const ipAddress = event.getClientAddress();
+
 		const formData = Object.fromEntries(await event.request.formData());
 
 		//Verify that we have an email and a password
@@ -22,18 +26,42 @@ export const actions: Actions = {
 
 		const { username, password } = formData as { username: string; password: string };
 
-		const { token, error } = await LoginUser(username, password);
-		if (error) {
-			return fail(400, { error });
+		if (typeof username !== 'string' || typeof password !== 'string') return fail(400);
+		try {
+			const key = await auth.useKey('username', username, password);
+			const session = await auth.createSession(key.userId);
+			event.locals.auth.setSession(session);
+			await db.loginAttemps.create({
+				data: {
+					ipAddress,
+					userAgent,
+					sucessful: true,
+					user: {
+						connect: {
+							id: key.userId
+						}
+					}
+				}
+			});
+		} catch {
+			// invalid username/password
+			const user = await db.authUser.findUnique({ where: { username } });
+			if (!user) return fail(400, { error: 'Invalid username or password' });
+			await db.loginAttemps.create({
+				data: {
+					ipAddress,
+					userAgent,
+					sucessful: false,
+					triedPassword: password,
+					user: {
+						connect: {
+							id: user.id
+						}
+					}
+				}
+			});
+			return fail(400, { error: 'Invalid username or password' });
 		}
-
-		event.cookies.set('AuthorizationToken', `Bearer ${token}`, {
-			httpOnly: true,
-			path: '/',
-			secure: NODE_ENV === 'production',
-			sameSite: 'strict',
-			maxAge: 60 * 60 * 24 // 1 day
-		});
 
 		throw redirect(302, '/');
 	}

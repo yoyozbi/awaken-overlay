@@ -1,5 +1,5 @@
-import type { Handle } from '@sveltejs/kit';
-import { validateSession } from '$lib/user.model.server';
+import type {Handle} from '@sveltejs/kit';
+import {auth} from "$lib/server/lucia"
 import { createContext } from '$lib/trpc/context';
 import { router } from '$lib/trpc/router';
 import { createTRPCWebSocketServer } from 'trpc-sveltekit/websocket';
@@ -8,18 +8,7 @@ import { building } from '$app/environment';
 if (!building) createTRPCWebSocketServer({ router, createContext });
 
 export const handle: Handle = async ({ event, resolve }) => {
-	const authCookie = event.cookies.get('AuthorizationToken');
 
-	if (authCookie) {
-		const session = await validateSession(authCookie);
-		if (!session) {
-			throw new Error('User not authenticated');
-		}
-		if ('error' in session) {
-			throw new Error(session.error);
-		}
-
-		event.locals.user = session;
-	}
-	return resolve(event);
+	event.locals.auth = auth.handleRequest(event);
+	return await resolve(event);
 };
