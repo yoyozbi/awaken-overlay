@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    image: ghcr.io/yoyozbi/awaken-overlay
+    image: awaken-overlay:test
     ports:
       - 3000:3000
     environment:
