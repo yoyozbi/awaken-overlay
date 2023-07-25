@@ -1,0 +1,19 @@
+version: '3'
+services:
+  app:
+    image: awaken-overlay:test
+    ports:
+      - 3000:3000
+    environment:
+      POSTGRES_URL: postgres://postgres:postgres@db:5432/postgres
+      ADMIN_PASSWORD: 123456
+      ORIGIN: http://localhost:3000
+      JWT_ACCESS_SECRET: owuieasdflkasjdflkj
+    depends_on:
+      - db
+  db:
+    image: postgres:13.1-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres

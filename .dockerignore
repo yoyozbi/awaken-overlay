@@ -11,3 +11,4 @@ docker-compose.dev.yml
 public
 .svelte-kit
 build
+postgres-data
