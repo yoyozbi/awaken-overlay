@@ -17,16 +17,19 @@
     "discord.js": "^14.13.0",
     "drizzle-orm": "^0.28.2",
     "googleapis": "^126.0.0",
+    "inversify": "^6.0.1",
     "postgres": "^3.3.5",
     "ts-node": "^10.9.1",
     "tsconfig": "workspace:*",
     "typescript": "^5.0.0",
+    "winston": "^3.10.0",
     "zod": "^3.22.2"
   },
   "devDependencies": {
     "@types/node": "^20.4.4",
     "dotenv": "^16.1.4",
     "drizzle-kit": "^0.19.13",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "reflect-metadata": "^0.1.13"
   }
 }

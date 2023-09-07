@@ -1,5 +1,5 @@
-import {google} from "googleapis";
-import {z} from "zod";
+import { google } from "googleapis";
+import { z } from "zod";
 
 const GDate = z.object({
   date: z.date(),
@@ -8,10 +8,10 @@ const GDate = z.object({
 });
 
 const GUser = z.object({
-    id: z.string(),
-    email: z.string(),
-    displayName: z.string(),
-    self: z.boolean()
+  id: z.string(),
+  email: z.string(),
+  displayName: z.string(),
+  self: z.boolean()
 });
 const GEventSchema = z.object({
   kind: z.literal("calendar#event"),
@@ -72,7 +72,7 @@ const GEventSchema = z.object({
       iconLink: z.string(),
       fileId: z.string()
     })
-  ) 
+  )
 });
 
 const GetEventsSchema = z.object({
@@ -98,8 +98,7 @@ const GetEventsSchema = z.object({
 type GetEvents = z.infer<typeof GetEventsSchema>;
 
 
-function getAuth()
-{
+function getAuth() {
   return new google.auth.GoogleAuth({
     keyFile: process.env.GOOGLE_APPLICATION_FILE,
     scopes: [
@@ -109,10 +108,9 @@ function getAuth()
   });
 }
 
-export async function GetCalendarEvents(calendarId: string): Promise<GetEvents|undefined>
-{
+export async function GetCalendarEvents(calendarId: string): Promise<GetEvents | undefined> {
   const auth = getAuth();
-  const calendar = google.calendar({version: 'v3', auth});
+  const calendar = google.calendar({ version: 'v3', auth });
 
   const res = await calendar.events.list({
     calendarId,
@@ -123,7 +121,7 @@ export async function GetCalendarEvents(calendarId: string): Promise<GetEvents|u
   });
   const schema = GetEventsSchema.safeParse(res.data);
 
-  if(schema.success)
+  if (schema.success)
     return schema.data
 
   console.warn(schema.error);
