@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1692695676180,
+      "tag": "0000_pink_crusher_hogan",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1692695917368,
+      "tag": "0001_familiar_wind_dancer",
+      "breakpoints": true
+    }
+  ]
+}
