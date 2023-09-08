@@ -1,27 +1,23 @@
-import { inject, injectable } from "inversify"
+import { multiInject, inject, injectable } from "inversify"
+import type IEvent from "./IEvent"
 import IClientService from "./IClientService"
-import { type Client as DiscordClient, GatewayIntentBits, Events, Routes } from "discord.js"
+import { type Client as DiscordClient, GatewayIntentBits } from "discord.js"
 import * as discordjs from "discord.js"
 import { TYPES } from '../../types';
-import ICommandService from './ICommandsService';
 import ILoggerService from './ILoggerService';
-import IEventsService from './IEventsService';
 
 @injectable()
 export default class ClientService implements IClientService {
   private client: DiscordClient;
-  private commands: ICommandService;
   private logger: ILoggerService;
-  private events: IEventsService;
+  private events: IEvent[];
 
 
   constructor(
-    @inject(TYPES.CommandsService) commands: ICommandService,
-    @inject(TYPES.EventsService) events: IEventsService,
+    @multiInject(TYPES.Events) events: IEvent[],
     @inject(TYPES.LoggerService) logger: ILoggerService,
     @inject(TYPES.discord) discord: typeof discordjs
   ) {
-    this.commands = commands;
     this.logger = logger;
     this.events = events;
 
@@ -30,12 +26,8 @@ export default class ClientService implements IClientService {
   }
 
   private registerEvents() {
-    for (let event of this.events.getEvents()) {
-      if (event.eventName == "ready") {
-        this.client.on("ready", (client) => event.func(this.commands.getCommands(), this.logger, client))
-      } else {
-        this.client.on(event.eventName, (...args) => event.func(this.logger, ...args));
-      }
+    for (let event of this.events) {
+      this.client.on(event.name, event.run.bind(event));
     }
   }
 

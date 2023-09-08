@@ -1,15 +1,17 @@
-import { Container, ContainerModule } from 'inversify';
 import 'reflect-metadata';
+import { Container, ContainerModule } from 'inversify';
 import { TYPES } from './types';
+import type IEvent from './services/discord/IEvent';
 import * as discord from "discord.js";
-import ICommandService from './services/discord/ICommandsService';
-import CommandsService from './services/discord/CommandsService';
 import IClientService from './services/discord/IClientService';
 import ClientService from "./services/discord/ClientService"
 import ILoggerService from './services/discord/ILoggerService';
 import LoggerService from "./services/discord/LoggerService";
-import IEventsService from './services/discord/IEventsService';
-import EventsService from './services/discord/EventsService';
+import { Command } from './interfaces/Command';
+import PingCommand from './commands/Ping';
+import HelloCommand from './commands/Hello';
+import InteractionEvent from './events/onInteraction';
+import ReadyEvent from './events/onReady';
 
 type discordType = typeof discord;
 
@@ -19,10 +21,17 @@ const thirdPartyDependencies = new ContainerModule(bind => {
 
 
 const applicationDependencies = new ContainerModule(bind => {
-  bind<ICommandService>(TYPES.CommandsService).to(CommandsService).inSingletonScope();
-  bind<IEventsService>(TYPES.EventsService).to(EventsService).inSingletonScope();
-  bind<ILoggerService>(TYPES.LoggerService).to(LoggerService).inSingletonScope();
   bind<IClientService>(TYPES.ClientService).to(ClientService);
+  bind<ILoggerService>(TYPES.LoggerService).to(LoggerService).inSingletonScope();
+
+  // Events
+  bind<IEvent>(TYPES.Events).to(InteractionEvent).inSingletonScope();
+  bind<IEvent>(TYPES.Events).to(ReadyEvent).inSingletonScope();
+
+  // Commands
+  bind<Command>(TYPES.Commands).to(PingCommand).inSingletonScope();
+  bind<Command>(TYPES.Commands).to(HelloCommand).inSingletonScope();
+
 });
 
 const container = new Container();

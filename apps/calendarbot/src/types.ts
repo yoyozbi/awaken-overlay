@@ -1,8 +1,8 @@
 const TYPES = {
-  CommandsService: Symbol.for("CommandsService"),
+  Commands: Symbol.for("Commands"),
   ClientService: Symbol.for("ClientService"),
   LoggerService: Symbol.for("LoggerService"),
-  EventsService: Symbol.for("EventsService"),
+  Events: Symbol.for("Events"),
   discord: Symbol.for("discord")
 }
 
