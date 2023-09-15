@@ -199,6 +199,9 @@ importers:
       drizzle-kit:
         specifier: ^0.19.13
         version: 0.19.13
+      eslint-config-custom:
+        specifier: workspace:^
+        version: link:../../packages/eslint-config-custom
       nodemon:
         specifier: ^3.0.1
         version: 3.0.1

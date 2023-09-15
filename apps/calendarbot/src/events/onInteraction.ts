@@ -1,7 +1,6 @@
 import { injectable, multiInject } from "inversify";
 import type { CacheType, Interaction } from "discord.js";
 import type Event from "../interfaces/Event"
-import ILoggerService from "../services/discord/ILoggerService";
 
 import { TYPES } from "../types";
 import { Command } from "../interfaces/Command";

@@ -13,6 +13,7 @@ const GUser = z.object({
   displayName: z.string(),
   self: z.boolean()
 });
+
 const GEventSchema = z.object({
   kind: z.literal("calendar#event"),
   etag: z.string(),
@@ -75,6 +76,8 @@ const GEventSchema = z.object({
   )
 });
 
+export type GEvent = z.infer<typeof GEventSchema>;
+
 const GetEventsSchema = z.object({
   kind: z.literal("calendar#events"),
   etag: z.string(),
@@ -95,7 +98,7 @@ const GetEventsSchema = z.object({
 
 })
 
-type GetEvents = z.infer<typeof GetEventsSchema>;
+export type GetEvents = z.infer<typeof GetEventsSchema>;
 
 
 function getAuth() {
