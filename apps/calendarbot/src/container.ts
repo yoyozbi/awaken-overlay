@@ -16,30 +16,36 @@ import type IDBService from './services/db/IDBService';
 import DbService from './services/db/DBService';
 import type ICalendarService from './services/db/ICalendarService';
 import CalendarService from './services/db/CalendarService';
+import IGuildService from './services/db/IGuildService';
+import GuildService from './services/db/GuildService';
+import RegisterCommand from './commands/register';
 
 type discordType = typeof discord;
 
 const thirdPartyDependencies = new ContainerModule(bind => {
-	bind<discordType>(TYPES.discord).toConstantValue(discord);
+  bind<discordType>(TYPES.discord).toConstantValue(discord);
 })
 
 
 const applicationDependencies = new ContainerModule(bind => {
-	// DB
-	bind<IDBService>(TYPES.DBService).to(DbService).inSingletonScope()
-	bind<ICalendarService>(TYPES.CalendarService).to(CalendarService).inSingletonScope()
+  // DB
+  bind<IDBService>(TYPES.DBService).to(DbService).inSingletonScope()
+  bind<ICalendarService>(TYPES.CalendarService).to(CalendarService).inSingletonScope()
+  bind<IGuildService>(TYPES.GuildService).to(GuildService).inSingletonScope()
 
-	// Discord
-	bind<IClientService>(TYPES.ClientService).to(ClientService);
-	bind<ILoggerService>(TYPES.LoggerService).to(LoggerService).inSingletonScope();
 
-	// Events
-	bind<Event<any>>(TYPES.Events).to(InteractionEvent).inSingletonScope();
-	bind<Event<any>>(TYPES.Events).to(ReadyEvent).inSingletonScope();
+  // Discord
+  bind<IClientService>(TYPES.ClientService).to(ClientService);
+  bind<ILoggerService>(TYPES.LoggerService).to(LoggerService).inSingletonScope();
 
-	// Commands
-	bind<Command>(TYPES.Commands).to(PingCommand).inSingletonScope();
-	bind<Command>(TYPES.Commands).to(HelloCommand).inSingletonScope();
+  // Events
+  bind<Event<any>>(TYPES.Events).to(InteractionEvent).inSingletonScope();
+  bind<Event<any>>(TYPES.Events).to(ReadyEvent).inSingletonScope();
+
+  // Commands
+  bind<Command>(TYPES.Commands).to(PingCommand).inSingletonScope();
+  bind<Command>(TYPES.Commands).to(HelloCommand).inSingletonScope();
+  bind<Command>(TYPES.Commands).to(RegisterCommand).inSingletonScope();
 
 });
 

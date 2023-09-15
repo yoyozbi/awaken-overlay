@@ -1,3 +1,5 @@
+import GuildService from "./services/db/GuildService"
+
 const TYPES = {
   // Discord
   Commands: Symbol.for("Commands"),
@@ -8,7 +10,8 @@ const TYPES = {
 
   // DB
   DBService: Symbol.for("DBService"),
-  CalendarService: Symbol.for("CalendarService")
+  CalendarService: Symbol.for("CalendarService"),
+  GuildService: Symbol.for("GuildService")
 }
 
 export { TYPES }

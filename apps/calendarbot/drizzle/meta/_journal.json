@@ -15,6 +15,13 @@
       "when": 1692695917368,
       "tag": "0001_familiar_wind_dancer",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1694788838120,
+      "tag": "0002_conscious_blindfold",
+      "breakpoints": true
     }
   ]
 }
