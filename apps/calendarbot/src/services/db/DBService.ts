@@ -1,23 +1,29 @@
 import { injectable, inject } from "inversify";
-import { drizzle } from "drizzle-orm/postgres-js"
-import postgres from "postgres"
+import { type NodePgDatabase, drizzle } from "drizzle-orm/node-postgres"
+import { Client } from "pg";
 import ILoggerService from "../discord/ILoggerService";
 import type IDBService from "./IDBService";
 import { TYPES } from "../../types";
-import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
 @injectable()
 export default class DBService implements IDBService {
-  private logger: ILoggerService;
-  private db: PostgresJsDatabase<Record<string, never>>;
+	private logger: ILoggerService;
+	private db: NodePgDatabase;
 
-  constructor(@inject(TYPES.LoggerService) logger: ILoggerService) {
-    this.logger = logger;
-    this.db = drizzle(postgres(process.env.POSTGRES_URL));
-  }
+	constructor(@inject(TYPES.LoggerService) logger: ILoggerService) {
+		this.logger = logger;
 
-  getDb(): PostgresJsDatabase<Record<string, never>> {
-    return this.db;
-  }
+		const client = new Client({ connectionString: process.env.POSTGRES_URL })
+
+		if (process.env.NODE_ENV != "production") {
+			this.db = drizzle(client, { logger: true });
+		} else {
+			this.db = drizzle(client);
+		}
+	}
+
+	getDb(): NodePgDatabase {
+		return this.db;
+	}
 
 }

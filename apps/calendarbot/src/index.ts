@@ -1,6 +1,4 @@
-if (process.env.NODE_ENV != "production") {
-	require('dotenv').config({ path: "./.env" });
-}
+require('dotenv').config({ path: "./.env" });
 import "./utils/EnvValidation"
 import { container } from "./container";
 import { TYPES } from "./types";

@@ -1,5 +1,5 @@
-import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 export default interface IDBService {
-  getDb(): PostgresJsDatabase<Record<string, never>>
+	getDb(): NodePgDatabase;
 }

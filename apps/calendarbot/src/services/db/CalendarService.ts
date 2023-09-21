@@ -3,14 +3,14 @@ import type ICalendarService from "./ICalendarService";
 import type { Calendar, NewCalendar } from "../../db/types"
 import { calendars, guilds } from "../../db/schema";
 import { type GEvent, GetCalendarEvents } from "../../utils/Google";
-import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { TYPES } from "../../types";
 import IDBService from "./IDBService";
 import { eq } from "drizzle-orm";
+import { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 @injectable()
 export default class CalendarService implements ICalendarService {
-	private db: PostgresJsDatabase<Record<string, never>>;
+	private db: NodePgDatabase;
 
 	constructor(@inject(TYPES.DBService) dbService: IDBService) {
 		this.db = dbService.getDb();
@@ -41,7 +41,9 @@ export default class CalendarService implements ICalendarService {
 			guildId: calendars.guildId,
 			channelId: calendars.channelId,
 			googleCalendarId: calendars.googleCalendarId,
-			messageId: calendars.messageId
+			messageId: calendars.messageId,
+			schedule: calendars.schedule,
+			numberOfDays: calendars.numberOfDays
 		})
 			.from(calendars)
 			.leftJoin(guilds, eq(calendars.guildId, guilds.id))

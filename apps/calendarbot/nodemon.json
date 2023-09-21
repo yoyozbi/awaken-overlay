@@ -1,0 +1,5 @@
+{
+	"events": {
+		"restart": "pnpm run migrate"
+	}
+}

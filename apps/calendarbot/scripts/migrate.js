@@ -1,16 +1,21 @@
-const postgres = require("postgres");
-const { drizzle } = require("drizzle-orm/postgres-js");
-const { migrate } = require("drizzle-orm/postgres-js/migrator");
+require("dotenv").config();
 
-export const migrate = async () => {
-  const postgresUrl = process.env.POSTGRES_URL;
-  if (!postgresUrl) {
-    console.error("No POSTGRES_URL found ");
-    return;
-  }
-  const client = postgres(postgresUrl, { max: 1 });
 
-  const db = drizzle(client);
-  await migrate(db, { migrationsFolder: './drizzle' });
+const pg = require("pg");
+const { drizzle } = require("drizzle-orm/node-postgres");
+const { migrate } = require("drizzle-orm/node-postgres/migrator");
+
+async function main() {
+	const postgresUrl = process.env.POSTGRES_URL;
+	if (!postgresUrl) {
+		console.error("No POSTGRES_URL found");
+		return;
+	}
+	const client = new pg.Client({ connectionString: postgresUrl });
+
+	const db = drizzle(client);
+	await migrate(db, { migrationsFolder: './drizzle' });
 
 }
+
+main().catch(console.error)
