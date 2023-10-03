@@ -11,13 +11,16 @@ import ILoggerService from '../discord/ILoggerService';
 
 @injectable()
 export default class GuildService implements IGuildService {
-	private db: NodePgDatabase;
+	private db: NodePgDatabase | undefined;
 	private logger: ILoggerService;
 	constructor(@inject(TYPES.DBService) private dbService: IDBService, @inject(TYPES.LoggerService) loggerService: ILoggerService) {
-		this.db = dbService.getDb();
+		dbService.getDb().then((db) => this.db = db);
 		this.logger = loggerService;
 	}
 	async getGuild(guildId: string): Promise<Guild | undefined> {
+		if (!this.db)
+			return;
+
 		const results = await this.db.select().from(guilds).where(eq(guilds.guildId, guildId));
 		this.logger.log("get")
 		if (results.length == 0)
@@ -26,6 +29,9 @@ export default class GuildService implements IGuildService {
 	}
 
 	async upsertGuild(guildId: string): Promise<Guild> {
+		if (!this.db)
+			throw new Error("No database connection");
+
 		let result = await this.getGuild(guildId);
 		this.logger.log("Hello")
 
@@ -37,6 +43,9 @@ export default class GuildService implements IGuildService {
 		return await this.createGuild(guildId);
 	}
 	async createGuild(guildId: string): Promise<Guild> {
+		if (!this.db)
+			throw new Error("No database connection");
+
 		const results = await this.db.insert(guilds).values({ guildId }).returning();
 		return results[0];
 	}

@@ -1,4 +1,5 @@
-require('dotenv').config({ path: "./.env" });
+import * as dotenv from "dotenv";
+dotenv.config({ path: "./.env" });
 import "./utils/EnvValidation"
 import { container } from "./container";
 import { TYPES } from "./types";

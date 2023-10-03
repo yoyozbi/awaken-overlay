@@ -163,8 +163,8 @@ importers:
         specifier: ^14.13.0
         version: 14.13.0
       drizzle-orm:
-        specifier: ^0.28.2
-        version: 0.28.2(@types/pg@8.10.2)(pg@8.11.3)
+        specifier: ^0.28.6
+        version: 0.28.6(@types/pg@8.10.2)(pg@8.11.3)
       googleapis:
         specifier: ^126.0.0
         version: 126.0.0
@@ -1991,8 +1991,8 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.28.2(@types/pg@8.10.2)(pg@8.11.3):
-    resolution: {integrity: sha512-QRyuzvpJr7GE6LpvZ/sg2nAKNg2if1uGGkgFTiXn4auuYId//vVJe6HBsDTktfKfcaDGzIYos+/f+PS5EkBmrg==}
+  /drizzle-orm@0.28.6(@types/pg@8.10.2)(pg@8.11.3):
+    resolution: {integrity: sha512-yBe+F9htrlYER7uXgDJUQsTHFoIrI5yMm5A0bg0GiZ/kY5jNXTWoEy4KQtg35cE27sw1VbgzoMWHAgCckUUUww==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
