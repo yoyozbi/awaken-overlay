@@ -8,10 +8,10 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "eslint": "^8.0.0",
+    "eslint": "^8.50.0",
     "eslint-config-custom": "workspace:^",
-    "prettier": "^3.0.0",
-    "prettier-plugin-svelte": "^3.0.0",
+    "prettier": "^3.0.3",
+    "prettier-plugin-svelte": "^3.0.3",
     "turbo": "latest"
   },
   "packageManager": "pnpm@7.21.1"
