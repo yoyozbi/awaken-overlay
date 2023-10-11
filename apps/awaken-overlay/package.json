@@ -61,7 +61,7 @@
     "flowbite-svelte": "^0.38.1",
     "lucia-auth": "^1.8.0",
     "npm-run-all": "^4.1.5",
-    "svelte-time": "^0.7.1",
+    "svelte-time": "^0.8.0",
     "trpc-sveltekit": "^3.5.12",
     "ts-node": "^10.9.1",
     "ui": "workspace:^",
