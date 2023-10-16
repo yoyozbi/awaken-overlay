@@ -33,7 +33,7 @@ export const actions = {
 		if ('isAdmin' in data) isAdmin = true;
 		try {
 			await auth.createUser({
-				primaryKey: {
+				key: {
 					providerId: 'username',
 					providerUserId: data.username,
 					password: data.password

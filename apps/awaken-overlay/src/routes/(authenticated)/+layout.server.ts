@@ -2,13 +2,13 @@ import type { LayoutServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
 
 export const load: LayoutServerLoad = async (event) => {
-	const { user } = await event.locals.auth.validateUser();
+	const session = await event.locals.auth.validate();
 
-	if (!user) {
+	if (!session) {
 		throw redirect(301, '/login');
 	}
 	return {
-		user,
+		user: session.user,
 		displayNav: !event.request.url.includes('?navbar=false')
 	};
 };
