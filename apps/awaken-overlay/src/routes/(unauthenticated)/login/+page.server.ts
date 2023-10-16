@@ -4,7 +4,7 @@ import { auth } from '$lib/server/lucia';
 import db from '$lib/db.server';
 
 export const load: PageServerLoad = async (event) => {
-	const { session } = await event.locals.auth.validateUser();
+	const session = await event.locals.auth.validate();
 
 	if (session) {
 		throw redirect(302, '/');
@@ -29,7 +29,7 @@ export const actions: Actions = {
 		if (typeof username !== 'string' || typeof password !== 'string') return fail(400);
 		try {
 			const key = await auth.useKey('username', username, password);
-			const session = await auth.createSession(key.userId);
+			const session = await auth.createSession({ userId: key.userId, attributes: {} });
 			event.locals.auth.setSession(session);
 			await db.loginAttemps.create({
 				data: {

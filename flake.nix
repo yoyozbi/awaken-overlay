@@ -2,6 +2,7 @@
   # Override nixpkgs to use the latest set of node packages
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/master";
   inputs.systems.url = "github:nix-systems/default";
+	inputs.flake-utils.url = "github:numtide/flake-utils";
 
   outputs = {
     self,
@@ -16,19 +17,23 @@
       };
     in {
       devShells.default = pkgs.mkShell {
-        buildInputs = [
-          pkgs.nodejs
-          # You can set the major version of Node.js to a specific one instead
-          # of the default version
-          # pkgs.nodejs-19_x
+        buildInputs = with pkgs; [
+          nodejs_18
+          
+          nodePackages.pnpm
 
-          # You can choose pnpm, yarn, or none (npm).
-          pkgs.nodePackages.pnpm
-          # pkgs.yarn
+					nodePackages.prisma
+					postgresql_15
+					openssl
 
-          pkgs.nodePackages.typescript
-          pkgs.nodePackages.typescript-language-server
+          nodePackages.typescript
+          nodePackages.typescript-language-server
         ];
-      };
+          shellHook = ''
+        			  export PRISMA_QUERY_ENGINE_LIBRARY=${pkgs.prisma-engines}/lib/libquery_engine.node
+                export PRISMA_QUERY_ENGINE_BINARY=${pkgs.prisma-engines}/bin/query-engine
+                export PRISMA_SCHEMA_ENGINE_BINARY=${pkgs.prisma-engines}/bin/schema-engine
+          '';
+			};
     });
 }
