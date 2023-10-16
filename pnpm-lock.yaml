@@ -66,8 +66,8 @@ importers:
         specifier: ^4.1.5
         version: 4.1.5
       svelte-time:
-        specifier: ^0.7.2
-        version: 0.7.2
+        specifier: ^0.8.0
+        version: 0.8.0
       trpc-sveltekit:
         specifier: ^3.5.21
         version: 3.5.21(@sveltejs/adapter-node@1.3.1)(@trpc/client@10.40.0)(@trpc/server@10.40.0)(ws@8.14.2)
@@ -3157,8 +3157,8 @@ packages:
       typescript: 5.2.2
     dev: true
 
-  /svelte-time@0.7.2:
-    resolution: {integrity: sha512-+mMTsXiDyOamyhwETN7Zgm4M8ZFrm2O6JC0pJI17I9rgTxJceslO1lqmvIQkkO74Ur1SUAqriT808dbO6g7Owg==}
+  /svelte-time@0.8.0:
+    resolution: {integrity: sha512-V0LBpJhYV2Q+jqiJ94ITAo51P6RIhrHQpDt3LCSk8PXfL2UMvSMlDzkqHq8mdKqmBCRZURnXhpynN03GQa/G/A==}
     dependencies:
       dayjs: 1.11.10
     dev: false
