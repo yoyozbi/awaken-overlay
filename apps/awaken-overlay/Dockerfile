@@ -1,4 +1,4 @@
-FROM node:18.17.1-alpine AS base
+FROM node:lts-alpine AS base
 RUN apk add --no-cache curl libc6-compat python3
 RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 
