@@ -50,7 +50,7 @@
   "dependencies": {
     "@lucia-auth/adapter-prisma": "^3.0.2",
     "@popperjs/core": "^2.11.8",
-    "@prisma/client": "5.4.2",
+    "@prisma/client": "5.5.0",
     "@trpc/client": "^10.40.0",
     "@trpc/server": "^10.40.0",
     "@types/ws": "^8.5.7",
