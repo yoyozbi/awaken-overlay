@@ -6,11 +6,11 @@ import type { Team } from '@prisma/client';
 export const load = (async ({ params }) => {
 	const { id } = params;
 	if (!id) {
-		throw error(400, 'missing id');
+		error(400, 'missing id');
 	}
 	const team = await getTeamById(id);
 	if (!team) {
-		throw error(404, 'Not found');
+		error(404, 'Not found');
 	}
 	return {
 		team

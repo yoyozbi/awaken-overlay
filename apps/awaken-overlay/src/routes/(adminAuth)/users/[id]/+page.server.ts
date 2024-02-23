@@ -8,11 +8,11 @@ import { object, string, type ObjectSchema, ValidationError } from 'yup';
 export const load = (async ({ params }) => {
 	const { id } = params;
 	if (!id) {
-		throw error(404, 'missing id');
+		error(404, 'missing id');
 	}
 	const user = await auth.getUser(id);
 	if (!user) {
-		throw error(404, 'Not found');
+		error(404, 'Not found');
 	}
 	const loginAttempts = await db.loginAttemps.findMany({ where: { user: { id } } });
 	return {
@@ -34,11 +34,11 @@ export const actions = {
 	default: async ({ params, request, locals }) => {
 		const { id } = params;
 		if (!id) {
-			throw error(404, 'missing id');
+			error(404, 'missing id');
 		}
 		const local = await auth.getUser(id);
 		if (!local) {
-			throw error(404, 'Not found');
+			error(404, 'Not found');
 		}
 		const formData = await request.formData();
 

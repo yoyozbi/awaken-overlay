@@ -7,7 +7,7 @@ export const load: PageServerLoad = async (event) => {
 	const session = await event.locals.auth.validate();
 
 	if (session) {
-		throw redirect(302, '/');
+		redirect(302, '/');
 	}
 };
 
@@ -63,6 +63,6 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid username or password' });
 		}
 
-		throw redirect(302, '/');
+		redirect(302, '/');
 	}
 };

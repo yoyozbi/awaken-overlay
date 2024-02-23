@@ -49,6 +49,6 @@ export const actions = {
 			return fail(400, { error: 'Unknown error when creating user' });
 		}
 
-		throw redirect(301, `/admin/`);
+		redirect(301, `/admin/`);
 	}
 } satisfies Actions;
