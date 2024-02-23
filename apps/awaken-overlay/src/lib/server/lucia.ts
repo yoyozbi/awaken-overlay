@@ -1,44 +1,49 @@
-import { lucia } from 'lucia';
-import { sveltekit } from 'lucia/middleware';
-import { prisma } from '@lucia-auth/adapter-prisma';
-import { dev } from '$app/environment';
+import { Lucia, TimeSpan } from 'lucia';
+import { PrismaAdapter } from '@lucia-auth/adapter-prisma';
 import db from '../db.server';
 import { env } from '$env/dynamic/private';
 import { building } from '$app/environment';
 
-export const auth = lucia({
-	adapter: prisma(db, {
-		user: 'authUser',
-		key: 'authKey',
-		session: 'authSession'
-	}),
-	env: dev ? 'DEV' : 'PROD',
-	middleware: sveltekit(),
-	// transformDatabaseUser: (userData) => {
-	// 	return {
-	// 		userId: userData.id,
-	// 		username: userData.username,
-	// 		isAdmin: userData.isAdmin,
-	// 		createdAt: userData.createdAt,
-	// 		updatedAt: userData.updatedAt
-	// 	};
-	// }
-	getUserAttributes: (data) => {
+const adapter = new PrismaAdapter(db.authSession, db.authUser);
+
+export const lucia = new Lucia(adapter, {
+	getUserAttributes: (attributes: DatabaseUserAttributes) => {
 		return {
-			username: data.username,
-			isAdmin: data.isAdmin,
-			createdAt: data.createdAt,
-			updatedAt: data.updatedAt
+			username: attributes.username,
+			isAdmin: attributes.isAdmin,
+			createdAt: attributes.createdAt,
+			updatedAt: attributes.updatedAt
 		}
 	},
-	csrfProtection: true,
+	sessionExpiresIn: new TimeSpan(30, "d"),
 	sessionCookie: {
+		expires: false,
 		name: "user_sesion",
 		attributes: {
 			sameSite: "strict"
 		}
 	}
 });
+
+export async function createUser(username: string, password: string, isAdmin = false) {
+
+}
+
+declare module 'lucia' {
+	interface Register {
+		Lucia: typeof lucia;
+		DatabaseUserAttributes: DatabaseUserAttributes;
+	}
+}
+
+interface DatabaseUserAttributes {
+	username: string;
+	isAdmin: boolean;
+	createdAt: Date;
+	updatedAt: Date;
+
+}
+
 async function seedAdminUser() {
 	if (!env.ADMIN_PASSWORD) {
 		console.error('NO ADMIN PASSWORD SET YOU WILL NOT BE ABLE TO LOGIN');
@@ -49,7 +54,7 @@ async function seedAdminUser() {
 	if (user) return;
 	console.log('Admin user not found creating it');
 	try {
-		await auth.createUser({
+		await lucia.createUser({
 			key: {
 				providerId: 'username',
 				providerUserId: 'admin',
@@ -67,4 +72,4 @@ async function seedAdminUser() {
 	}
 }
 seedAdminUser();
-export type Auth = typeof auth;
+export type Auth = typeof lucia;

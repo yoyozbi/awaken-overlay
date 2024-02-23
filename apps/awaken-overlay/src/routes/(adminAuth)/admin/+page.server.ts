@@ -3,7 +3,7 @@ import { getTeams } from '$lib/team.model.server';
 import { object, string, type InferType } from 'yup';
 import { fail } from '@sveltejs/kit';
 import db from '$lib/db.server';
-import { auth } from '$lib/server/lucia';
+import { lucia } from '$lib/server/lucia';
 
 export const load = (async () => {
 	const teams = await getTeams();
@@ -28,6 +28,6 @@ export const actions = {
 			return fail(400, { error: 'Missing userId' });
 		}
 
-		await auth.deleteUser(data.userId);
+		await lucia.deleteUser(data.userId);
 	}
 } satisfies Actions;

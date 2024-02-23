@@ -27,7 +27,7 @@ model LoginAttemps {
 model AuthUser {
   id           String @id @unique
   auth_session AuthSession[]
-  auth_key     AuthKey[]
+	hashedPassword String
 
 
   LoginAttemps LoginAttemps[]
@@ -42,24 +42,14 @@ model AuthUser {
 
 model AuthSession {
   id             String @id @unique
-  user_id        String
-  active_expires BigInt
-  idle_expires   BigInt
-  auth_user      AuthUser  @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  userId        String
+	expiresAt      DateTime
+  auth_user      AuthUser  @relation(references: [id], fields: [userId], onDelete: Cascade)
 
-  @@index([user_id])
+  @@index([userId])
   @@map("auth_session")
 }
 
-model AuthKey {
-  id      String  @id @unique
-  hashed_password String?
-  user_id         String
-  auth_user       AuthUser  @relation(references: [id], fields: [user_id], onDelete: Cascade)
-
-  @@index([user_id])
-  @@map("auth_key")
-}
 
 model Team {
   id           String        @id @default(uuid())

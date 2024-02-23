@@ -1,5 +1,5 @@
 import type { Actions } from './$types';
-import { auth } from '$lib/server/lucia';
+import { lucia } from '$lib/server/lucia';
 import { fail, redirect } from '@sveltejs/kit';
 import { object, type ObjectSchema, string, ValidationError } from 'yup';
 
@@ -32,7 +32,7 @@ export const actions = {
 		let isAdmin = false;
 		if ('isAdmin' in data) isAdmin = true;
 		try {
-			await auth.createUser({
+			await lucia.createUser({
 				key: {
 					providerId: 'username',
 					providerUserId: data.username,

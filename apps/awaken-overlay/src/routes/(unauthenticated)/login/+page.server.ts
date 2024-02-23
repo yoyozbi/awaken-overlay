@@ -1,6 +1,6 @@
 import type { Actions, PageServerLoad } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
-import { auth } from '$lib/server/lucia';
+import { lucia } from '$lib/server/lucia';
 import db from '$lib/db.server';
 
 export const load: PageServerLoad = async (event) => {
@@ -28,8 +28,8 @@ export const actions: Actions = {
 
 		if (typeof username !== 'string' || typeof password !== 'string') return fail(400);
 		try {
-			const key = await auth.useKey('username', username, password);
-			const session = await auth.createSession({ userId: key.userId, attributes: {} });
+			const key = await lucia.useKey('username', username, password);
+			const session = await lucia.createSession({ userId: key.userId, attributes: {} });
 			event.locals.auth.setSession(session);
 			await db.loginAttemps.create({
 				data: {
