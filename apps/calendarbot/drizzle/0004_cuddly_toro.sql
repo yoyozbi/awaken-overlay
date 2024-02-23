@@ -1,0 +1,1 @@
+ALTER TABLE "calendars" ALTER COLUMN "message_id" DROP NOT NULL;
