@@ -4,33 +4,43 @@ import { createLogger, transports, format, Logger as WinstonLogger } from "winst
 
 @injectable()
 export default class LoggerService implements ILoggerService {
-  private logger: WinstonLogger;
+	private logger: WinstonLogger;
 
-  constructor() {
-    this.logger = createLogger({
-      transports: [new transports.Console()],
-      format: format.combine(format.colorize(), format.timestamp(), format.printf(({ timestamp, level, message }) => {
-        return `[${timestamp}] ${level}: ${message}`
-      })
-      ),
-    });
-  }
 
-  logDebug(message: string): void {
-    this.logger.debug(message);
-  }
 
-  log(message: string): void {
-    this.logger.info(message);
-  }
 
-  logWarning(message: string): void {
-    this.logger.warn(message)
-  }
+	constructor(name: string = "") {
+		const logConfig = {
+			level: 'debug',
+			format: format.combine(
+				format.timestamp({ format: 'YYYY-MM-dd HH:mm:ss.SSS' }),
+				format.printf((log) => `${[log.timestamp]} | ${log.level} | ${name} | ${log.message}`)
+			)
+		};
+		this.logger = createLogger({
+			transports: [new transports.Console(logConfig)],
+			format: format.combine(
+				format.splat(),
+				format.simple()
+			),
+		});
+	}
 
-  logError(message: string): void;
-  logError(error: Error): void;
-  logError(error: unknown): void {
-    this.logger.error(error);
-  }
+	logDebug(message: string): void {
+		this.logger.debug(message);
+	}
+
+	log(message: string): void {
+		this.logger.info(message);
+	}
+
+	logWarning(message: string): void {
+		this.logger.warn(message)
+	}
+
+	logError(message: string): void;
+	logError(error: Error): void;
+	logError(error: unknown): void {
+		this.logger.error(error);
+	}
 }

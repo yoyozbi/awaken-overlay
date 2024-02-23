@@ -14,10 +14,12 @@
   "author": "Yohan Zbinden",
   "license": "LGPL-3.0-or-later",
   "dependencies": {
+    "bree": "^9.1.3",
     "discord.js": "^14.13.0",
     "drizzle-orm": "^0.28.6",
     "googleapis": "^126.0.0",
     "inversify": "^6.0.1",
+    "nodemon": "^3.0.1",
     "pg": "^8.11.3",
     "ts-node": "^10.9.1",
     "tsconfig": "workspace:*",
@@ -31,7 +33,6 @@
     "dotenv": "^16.1.4",
     "drizzle-kit": "^0.19.13",
     "eslint-config-custom": "workspace:^",
-    "nodemon": "^3.0.1",
     "reflect-metadata": "^0.1.13"
   }
 }

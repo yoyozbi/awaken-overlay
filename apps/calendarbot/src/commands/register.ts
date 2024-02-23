@@ -1,9 +1,9 @@
 import { injectable, inject } from "inversify";
 import type { Command } from "../interfaces/Command";
 import { ChannelType, CommandInteraction, PermissionFlagsBits, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
-import ILoggerService from "../services/discord/ILoggerService";
-import IGuildService from "../services/db/IGuildService";
-import ICalendarService from "../services/db/ICalendarService";
+import type ILoggerService from "../services/discord/ILoggerService";
+import type IGuildService from "../services/db/IGuildService";
+import type ICalendarService from "../services/db/ICalendarService";
 import { TYPES } from "../types";
 
 enum NumberOfDays {
@@ -30,7 +30,9 @@ export default class RegisterCommand implements Command {
 	private logger: ILoggerService;
 	private guildService: IGuildService;
 	private calendarService: ICalendarService;
-	constructor(@inject(TYPES.LoggerService) logger: ILoggerService, @inject(TYPES.GuildService) guildService: IGuildService, @inject(TYPES.CalendarService) calendarService: ICalendarService) {
+	constructor(@inject(TYPES.LoggerService) logger: ILoggerService,
+		@inject(TYPES.GuildService) guildService: IGuildService,
+		@inject(TYPES.CalendarService) calendarService: ICalendarService) {
 		this.logger = logger;
 		this.guildService = guildService;
 		this.calendarService = calendarService;

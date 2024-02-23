@@ -2,7 +2,8 @@ import { injectable, inject } from "inversify";
 import type ICalendarService from "./ICalendarService";
 import type { Calendar, NewCalendar } from "../../db/types"
 import { calendars, guilds } from "../../db/schema";
-import { type GEvent, GetCalendarEvents } from "../../utils/Google";
+import type { GEvent } from "../../utils/Google";
+import { GetCalendarEvents } from "../../utils/Google";
 import { TYPES } from "../../types";
 import type IDBService from "./IDBService";
 import { eq } from "drizzle-orm";

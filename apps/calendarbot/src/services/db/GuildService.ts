@@ -1,7 +1,7 @@
 import { injectable, inject } from 'inversify';
 import IGuildService from './IGuildService';
 import { guilds } from '../../db/schema';
-import type { Guild, NewGuild } from '../../db/types';
+import type { Guild } from '../../db/types';
 import type IDBService from './IDBService';
 import { TYPES } from '../../types';
 import { eq } from 'drizzle-orm';
@@ -22,7 +22,6 @@ export default class GuildService implements IGuildService {
 			return;
 
 		const results = await this.db.select().from(guilds).where(eq(guilds.guildId, guildId));
-		this.logger.log("get")
 		if (results.length == 0)
 			return;
 		return results[0];
@@ -33,7 +32,6 @@ export default class GuildService implements IGuildService {
 			throw new Error("No database connection");
 
 		let result = await this.getGuild(guildId);
-		this.logger.log("Hello")
 
 		this.logger.log(result as never as string);
 
