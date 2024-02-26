@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '@prisma/client';
 import chalk from 'chalk';
 import { execSync } from 'child_process';
 
@@ -12,10 +12,10 @@ function errorLog(msg) {
 }
 
 console.log(chalk.green('Checking database connection...'));
-const prisma = new PrismaClient();
+const db = new prisma.PrismaClient();
 async function main() {
 	try {
-		await prisma.$connect();
+		await db.$connect();
 		success('Database connection established.');
 
 		console.log(chalk.green('Checking database migration status...'));
@@ -25,7 +25,7 @@ async function main() {
 		console.error(error);
 		err = true;
 	} finally {
-		await prisma.$disconnect();
+		await db.$disconnect();
 		if (err) process.exit(1);
 	}
 }
