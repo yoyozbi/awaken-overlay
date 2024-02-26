@@ -6,6 +6,7 @@ on:
     paths:
       - "apps/awaken-overlay/**/*"
       - "packages/**/*"
+      - ".github/workflows/**/*"
 
 env:
   REGISTRY: ghcr.io
