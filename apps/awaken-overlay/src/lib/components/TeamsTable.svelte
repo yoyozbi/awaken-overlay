@@ -50,13 +50,12 @@
 					></TableBodyCell
 				>
 				<TableBodyCell
-					><a
+					><button
 						on:click={() => {
 							deleteModal = true;
 							teamId = team.id;
 						}}
-						href=""
-						class="font-medium text-blue-600 hover:underline dark:text-blue-500">Delete</a
+						class="font-medium text-blue-600 hover:underline dark:text-blue-500">Delete</button
 					></TableBodyCell
 				>
 			</TableBodyRow>

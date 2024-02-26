@@ -1,11 +1,17 @@
 import type { PageServerLoad } from './$types';
 import { redirect, fail } from '@sveltejs/kit';
-import { auth } from '$lib/server/lucia';
+import { lucia } from '$lib/server/lucia';
 
-export const load: PageServerLoad = async ({ locals }) => {
-	const { session } = await locals.auth.validateUser();
-	if (!session) return fail(401);
-	await auth.invalidateSession(session.sessionId); // invalidate session
-	locals.auth.setSession(null); // remove cookie
-	return redirect(301, '/login');
+export const load: PageServerLoad = async ({ locals, cookies }) => {
+	if (!locals.user || !locals.session) {
+		return fail(401);
+	}
+	await lucia.invalidateSession(locals.session.id);
+	const sessionCookie = lucia.createBlankSessionCookie();
+	cookies.set(sessionCookie.name, sessionCookie.value, {
+		path: ".",
+		...sessionCookie.attributes
+	});
+	redirect(302, "/login");
+
 };

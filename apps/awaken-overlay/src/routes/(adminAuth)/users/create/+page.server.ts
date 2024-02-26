@@ -1,5 +1,5 @@
 import type { Actions } from './$types';
-import { auth } from '$lib/server/lucia';
+import { createUser } from '$lib/server/lucia';
 import { fail, redirect } from '@sveltejs/kit';
 import { object, type ObjectSchema, string, ValidationError } from 'yup';
 
@@ -32,19 +32,7 @@ export const actions = {
 		let isAdmin = false;
 		if ('isAdmin' in data) isAdmin = true;
 		try {
-			await auth.createUser({
-				key: {
-					providerId: 'username',
-					providerUserId: data.username,
-					password: data.password
-				},
-				attributes: {
-					isAdmin,
-					username: data.username,
-					createdAt: new Date(Date.now()),
-					updatedAt: new Date(Date.now())
-				}
-			});
+			await createUser(data.username, data.password, isAdmin);
 		} catch (e) {
 			return fail(400, { error: 'Unknown error when creating user' });
 		}
