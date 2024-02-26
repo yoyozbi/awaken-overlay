@@ -37,17 +37,15 @@ model AuthUser {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  @@map("auth_user")
 }
 
 model AuthSession {
   id             String @id @unique
   userId        String
 	expiresAt      DateTime
-  auth_user      AuthUser  @relation(references: [id], fields: [userId], onDelete: Cascade)
+  authUser      AuthUser  @relation(references: [id], fields: [userId], onDelete: Cascade)
 
   @@index([userId])
-  @@map("auth_session")
 }
 
 

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;
@@ -10,6 +9,4 @@
 	<p>User id: {data.user?.userId}</p>
 	<p>Username: {data.user?.username}</p>
 </div>
-<form use:enhance method="post">
-	<input type="submit" value="Sign out" />
-</form>
+<a href="/logout">Logout</a>

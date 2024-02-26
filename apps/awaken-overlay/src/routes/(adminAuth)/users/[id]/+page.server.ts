@@ -1,4 +1,3 @@
-import { lucia } from '$lib/server/lucia';
 import db from '$lib/db.server';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -10,7 +9,12 @@ export const load = (async ({ params }) => {
 	if (!id) {
 		error(404, 'missing id');
 	}
-	const user = await lucia.getUser(id);
+	const user = await db.authUser.findUnique({
+		where: {
+			id
+		}
+	});
+
 	if (!user) {
 		error(404, 'Not found');
 	}
@@ -32,11 +36,20 @@ const userUpdateSchema: ObjectSchema<userUpdate> = object({
 
 export const actions = {
 	default: async ({ params, request, locals }) => {
+		const { user } = await locals.user;
+		if (!user || !user.isAdmin) return fail(400, { error: 'Not logged in' });
+
 		const { id } = params;
 		if (!id) {
 			error(404, 'missing id');
 		}
-		const local = await lucia.getUser(id);
+
+		const local = await db.authUser.findUnique({
+			where: {
+				id
+			}
+		});
+
 		if (!local) {
 			error(404, 'Not found');
 		}
@@ -57,11 +70,14 @@ export const actions = {
 		}
 		const isAdmin = data.isAdmin === 'true';
 
-		const { user } = await locals.auth.validateUser();
-		if (!user) return fail(400, { error: 'Not logged in' });
-		const nData = await lucia.updateUserAttributes(id, {
-			username: data.username,
-			isAdmin
+		const nData = await db.authUser.update({
+			where: {
+				id
+			},
+			data: {
+				username: data.username,
+				isAdmin
+			}
 		});
 
 		return { data: nData };

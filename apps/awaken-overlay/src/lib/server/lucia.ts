@@ -1,8 +1,9 @@
-import { Lucia, TimeSpan } from 'lucia';
+import { Lucia, TimeSpan, generateId } from 'lucia';
 import { PrismaAdapter } from '@lucia-auth/adapter-prisma';
 import db from '../db.server';
 import { env } from '$env/dynamic/private';
 import { building } from '$app/environment';
+import { Argon2id } from "oslo/password";
 
 const adapter = new PrismaAdapter(db.authSession, db.authUser);
 
@@ -26,7 +27,19 @@ export const lucia = new Lucia(adapter, {
 });
 
 export async function createUser(username: string, password: string, isAdmin = false) {
+	const userId = generateId(15);
+	const hashedPassword = await new Argon2id().hash(password);
 
+	const user = await db.authUser.create({
+		data: {
+			id: userId,
+			username,
+			hashedPassword,
+			isAdmin
+		}
+	});
+
+	return user;
 }
 
 declare module 'lucia' {
@@ -54,19 +67,7 @@ async function seedAdminUser() {
 	if (user) return;
 	console.log('Admin user not found creating it');
 	try {
-		await lucia.createUser({
-			key: {
-				providerId: 'username',
-				providerUserId: 'admin',
-				password: env.ADMIN_PASSWORD
-			},
-			attributes: {
-				isAdmin: true,
-				username: 'admin',
-				createdAt: new Date(Date.now()),
-				updatedAt: new Date(Date.now())
-			}
-		});
+		await createUser("admin", env.ADMIN_PASSWORD, true);
 	} catch (e) {
 		console.error('unable to create admin user', e);
 	}
