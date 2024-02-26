@@ -28,14 +28,14 @@
 	<TabItem title="Infos" open>
 		<form
 			method="POST"
-			use:enhance={({ form, data, action, cancel }) => {
+			use:enhance={({ formData, action, cancel }) => {
 				let isAdmin = false;
-				if (data.has('isAdmin')) {
+				if (formData.has('isAdmin')) {
 					isAdmin = true;
-					data.delete('isAdmin');
+					formData.delete('isAdmin');
 				}
 
-				data.append('isAdmin', isAdmin.toString());
+				formData.append('isAdmin', isAdmin.toString());
 				console.log(data);
 				isSuccess = false;
 				return async ({ result }) => {

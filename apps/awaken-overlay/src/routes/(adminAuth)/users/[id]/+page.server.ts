@@ -36,7 +36,7 @@ const userUpdateSchema: ObjectSchema<userUpdate> = object({
 
 export const actions = {
 	default: async ({ params, request, locals }) => {
-		const { user } = await locals.user;
+		const { user } = await locals;
 		if (!user || !user.isAdmin) return fail(400, { error: 'Not logged in' });
 
 		const { id } = params;
