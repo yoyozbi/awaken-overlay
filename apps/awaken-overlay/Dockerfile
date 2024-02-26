@@ -1,6 +1,6 @@
 FROM node:lts-alpine AS base
 RUN apk add --no-cache curl libc6-compat python3
-RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh -
 
 FROM base AS builder
 WORKDIR /app
