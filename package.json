@@ -14,5 +14,5 @@
     "prettier-plugin-svelte": "^3.0.3",
     "turbo": "latest"
   },
-  "packageManager": "pnpm@7.21.1"
+  "packageManager": "pnpm@8.15.3"
 }
