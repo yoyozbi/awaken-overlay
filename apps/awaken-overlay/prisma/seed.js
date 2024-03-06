@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 const db = new PrismaClient();
 
 async function main() {
+	let bo3 = await db.bestOf.findFirst({where: {nbOfMatch: 3}});
 	console.log('Start seeding ...');
 	let solid = await db.team.findFirst({ where: { name: 'Solid' } });
 	if (!solid) {
@@ -10,7 +11,8 @@ async function main() {
 			data: {
 				name: 'Solid',
 				leftIcon: '',
-				rightIcon: ''
+				rightIcon: '',
+				bestOf: bo3
 			}
 		});
 	}
@@ -20,16 +22,17 @@ async function main() {
 			data: {
 				name: 'Aopik',
 				leftIcon: '',
-				rightIcon: ''
+				rightIcon: '',
+				bestOf: bo3
 			}
 		});
 
 		await db.team.createMany({
 			data: [
-				{ name: 'Phoenix', leftIcon: '', rightIcon: '' },
-				{ name: 'Dive Esport', leftIcon: '', rightIcon: '' },
-				{ name: 'Scythe of Seraph', leftIcon: '', rightIcon: '' },
-				{ name: 'Irie legacy', leftIcon: '', rightIcon: '' }
+				{ name: 'Phoenix', leftIcon: '', rightIcon: '', bestOf: bo3 },
+				{ name: 'Dive Esport', leftIcon: '', rightIcon: '', bestOf: bo3 },
+				{ name: 'Scythe of Seraph', leftIcon: '', rightIcon: '', bestOf: bo3 },
+				{ name: 'Irie legacy', leftIcon: '', rightIcon: '', bestOf: bo3 }
 			]
 		});
 		await db.currentMatch.create({

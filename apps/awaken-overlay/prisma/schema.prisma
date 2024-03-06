@@ -61,13 +61,32 @@ model Team {
 }
 
 model CurrentMatch {
-  id        String   @id @default(uuid())
-  team1Id   String   @unique
-  team2Id   String   @unique
+  id         String   @id @default(uuid())
+
+  team1Id    String   @unique
+  team2Id    String   @unique
+  bestOfId   String   @unique
+
   team1Score Int
   team2Score Int
+
+  team1      Team     @relation("Team1", fields: [team1Id], references: [id])
+  team2      Team     @relation("Team2", fields: [team2Id], references: [id])
+
+  bestOf     BestOf   @relation(references: [id], fields: [bestOfId])
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+ 
+}
+
+model BestOf {
+  id  String @id @default(uuid())
+  name String @unique
+  nbOfMatch Int @unique
+
+  matches CurrentMatch?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  team1     Team     @relation("Team1", fields: [team1Id], references: [id])
-  team2     Team     @relation("Team2", fields: [team2Id], references: [id])
 }
