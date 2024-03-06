@@ -6,7 +6,7 @@
 
 <h1>Profile</h1>
 <div>
-	<p>User id: {data.user?.userId}</p>
+	<p>User id: {data.user?.id}</p>
 	<p>Username: {data.user?.username}</p>
 </div>
 <a href="/logout">Logout</a>
