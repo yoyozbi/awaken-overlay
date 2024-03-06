@@ -69,6 +69,7 @@ model CurrentMatch {
 
   team1Score Int
   team2Score Int
+  gameTitle  String @default("SPRING SPLIT PLAYOFFS - BO7")
 
   team1      Team     @relation("Team1", fields: [team1Id], references: [id])
   team2      Team     @relation("Team2", fields: [team2Id], references: [id])
