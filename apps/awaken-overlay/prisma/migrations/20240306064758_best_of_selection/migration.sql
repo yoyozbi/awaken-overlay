@@ -19,7 +19,7 @@ CREATE TABLE "BestOf" (
     CONSTRAINT "BestOf_pkey" PRIMARY KEY ("id")
 );
 
-INSERT INTO "BestOf" ("id", "name", "nbOfMatch", "updatedAt") VALUES (gen_random_uuid(),'bo3', 3, CURRENT_TIMESTAMP);
+INSERT INTO "BestOf" ("id", "name", "nbOfMatch", "updatedAt") VALUES (gen_random_uuid(),'bo3', 2, CURRENT_TIMESTAMP);
 
 UPDATE "CurrentMatch" SET "bestOfId"=(SELECT id FROM "BestOf" LIMIT 1);
 

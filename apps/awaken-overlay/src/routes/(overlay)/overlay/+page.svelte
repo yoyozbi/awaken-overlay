@@ -16,6 +16,9 @@
 		$gameStore.serie.team2Score = newData.team2Score;
 		$gameStore.icons.team1 = newData.team1.leftIcon;
 		$gameStore.icons.team2 = newData.team2.rightIcon;
+		$gameStore.game.title = newData.gameTitle;
+		$gameStore.serie.nbOfMatch = newData.bestOf.nbOfMatch;
+
 	};
 	onMount(async () => {
 		ws = new SosWebSocket();
@@ -58,13 +61,13 @@
 	<div class="bo-scores">
 		<div>
 			<div class="score-boxes">
-				{#each Array.from({ length: maxGames }, (_, index) => index) as game}
+				{#each Array.from({ length: $gameStore.serie.nbOfMatch }, (_, index) => index) as game}
 					<div class="score-box {game < $gameStore.serie.team1Score ? 'filled' : ''}" />
 				{/each}
 			</div>
-			<div class="text"><p>SPRING SPLIT PLAYOFFS - BO7</p></div>
+			<div class="text"><p>{$gameStore.game.title}</p></div>
 			<div class="score-boxes">
-				{#each Array.from({ length: maxGames }, (_, index) => index) as game}
+				{#each Array.from({ length: $gameStore.serie.nbOfMatch }, (_, index) => index) as game}
 					<div class="score-box {game < $gameStore.serie.team2Score ? 'filled' : ''}" />
 				{/each}
 			</div>
@@ -107,7 +110,7 @@
 	}
 	.bo-scores {
 		display: flex;
-		justify-content: center;
+		justify-content: space-around;
 		align-items: center;
 	}
 	.bo-scores > * {

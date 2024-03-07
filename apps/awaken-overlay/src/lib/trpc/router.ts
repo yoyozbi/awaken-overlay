@@ -17,7 +17,9 @@ const currentMatchUpdateSchema: ObjectSchema<currentMatchUpdate> = object({
 	team1Id: string().required(),
 	team2Id: string().required(),
 	team1Score: number().required(),
-	team2Score: number().required()
+	team2Score: number().required(),
+	bestOfId: string().required(),
+	gameTitle: string().required()
 });
 
 export const t = initTRPC.context<Context>().create();
@@ -32,6 +34,7 @@ export const router = t.router({
 		return observable<CurrentMatchWithTeams>((emit) => {
 			const onUpdate = (match: CurrentMatchWithTeams) => {
 				emit.next(match);
+				console.log('emitted', match);
 			};
 
 			currentTeamUpdate.on('update', onUpdate);
@@ -60,7 +63,9 @@ export const router = t.router({
 				i.team1Id,
 				i.team2Id,
 				i.team1Score,
-				i.team2Score
+				i.team2Score,
+				i.bestOfId,
+				i.gameTitle
 			);
 			currentTeamUpdate.emit('update', updatedMatch);
 			return updatedMatch;

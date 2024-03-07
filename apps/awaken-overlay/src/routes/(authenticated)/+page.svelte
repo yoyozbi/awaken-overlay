@@ -15,10 +15,11 @@
 	const client = trpc();
 
 	const handleUpdate = async () => {
+		console.log('Updating current match');
 		await client.updateCurrentMatch.mutate($currentMatch);
 	};
 </script>
 
 <div>
-	<ScoreUpdate on:scoreUpdate={handleUpdate} teams={data.teams} />
+	<ScoreUpdate on:scoreUpdate={handleUpdate} teams={data.teams} bos={data.bos} />
 </div>

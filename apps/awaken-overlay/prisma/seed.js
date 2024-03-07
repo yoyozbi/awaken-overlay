@@ -34,15 +34,15 @@ async function trySeeding(name, toExec, exists) {
 }
 
 async function main() {
-  let bo3 = await db.bestOf.findFirst({ where: { nbOfMatch: 3 } });
+  let bo3 = await db.bestOf.findFirst({ where: { nbOfMatch: 2 } });
   console.log('---------------BO--------------------');
   await trySeeding('bo5', async () => {
     await db.bestOf.upsert({
       where: {
         nbOfMatch: 5
       },
-      create: { name: 'bo5', nbOfMatch: 5 },
-      update: { name: 'bo5', nbOfMatch: 5 }
+      create: { name: 'bo5', nbOfMatch: 3 },
+      update: { name: 'bo5', nbOfMatch: 3 }
     });
   });
 
@@ -51,8 +51,8 @@ async function main() {
       where: {
         nbOfMatch: 7
       },
-      create: { name: 'bo7', nbOfMatch: 7 },
-      update: { name: 'bo7', nbOfMatch: 7 }
+      create: { name: 'bo7', nbOfMatch: 5 },
+      update: { name: 'bo7', nbOfMatch: 5 }
     });
   });
 
