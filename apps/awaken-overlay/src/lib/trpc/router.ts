@@ -34,7 +34,6 @@ export const router = t.router({
 		return observable<CurrentMatchWithTeams>((emit) => {
 			const onUpdate = (match: CurrentMatchWithTeams) => {
 				emit.next(match);
-				console.log('emitted', match);
 			};
 
 			currentTeamUpdate.on('update', onUpdate);
