@@ -16,6 +16,7 @@
     $gameStore.icons.team2 = newData.team2.rightIcon;
     $gameStore.game.title = newData.gameTitle;
     $gameStore.serie.nbOfMatch = newData.bestOf.nbOfMatch;
+    $gameStore.serie.name = newData.bestOf.name;
   };
   onMount(async () => {
     ws = new SosWebSocket();
@@ -63,7 +64,7 @@
           <div class="score-box {reverse < $gameStore.serie.team1Score ? 'filled' : ''}" />
         {/each}
       </div>
-      <div class="text"><p>{$gameStore.game.title}</p></div>
+      <div class="text"><p>{$gameStore.game.title} <span style="font-weight: bold;">{$gameStore.serie.name.toUpperCase()}</span></p></div>
       <div class="score-boxes">
         {#each Array.from({ length: $gameStore.serie.nbOfMatch }, (_, index) => index) as game}
           <div class="score-box {game < $gameStore.serie.team2Score ? 'filled' : ''}" />
@@ -110,6 +111,14 @@
     min-width: 79px;
     color: white;
     font-family: 'Thunder';
+    font-size: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  p {
+    margin: 0px;
+    padding: 0px;
   }
   .scores :nth-child(2) {
     background-color: #242f33;
@@ -133,21 +142,23 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    align-self: center;
   }
   .bo-scores > * {
     padding: 0px;
     background: linear-gradient(
       to right,
-      rgba(255, 255, 255, 0.5) 0%,
-      rgba(255, 255, 255, 1) 5%,
-      rgba(255, 255, 255, 1) 95%,
-      rgba(255, 255, 255, 0.5)
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 1) 20%,
+      rgba(255, 255, 255, 1) 80%,
+      rgba(255, 255, 255, 0.1)
     );
     display: flex;
     justify-content: center;
     align-items: center;
     padding-top: 4px;
     padding-bottom: 4px;
+    width: 50%;
   }
 
   .score-boxes {
@@ -157,22 +168,32 @@
     margin-left: 5px;
   }
   .bo-scores .text {
-    font-weight: bold;
     font-size: 13px;
-    margin-left: 60px;
-    margin-right: 60px;
+    min-width: 130px;
+    margin-left: 10%;
+    margin-right: 10%;
+    text-align: center;
   }
   .score-box {
     background-color: #c4c4c4;
     width: 25px;
     height: 10px;
-    margin-right: 25px;
+    margin-right: 10px;
   }
   .bo-scores > div :nth-child(1) .filled {
     background-color: #242f33;
   }
   .bo-scores > div :nth-child(3) .filled {
     background-color: #5e4d45;
+  }
+  .bo-scores > div :nth-child(3) :nth-last-child(1) {
+    margin-right: 0px;
+  }
+  .bo-scores > div > :nth-child(1) > :nth-last-child(1) {
+    margin-right: 0px;
+  }
+  .bo-scores > div > :nth-child(1) > :nth-child(1) {
+    margin-left: 0px;
   }
 
   /* .filled { -->

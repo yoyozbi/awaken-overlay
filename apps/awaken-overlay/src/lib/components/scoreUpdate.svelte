@@ -18,6 +18,7 @@
   let loading = false;
 
   let localTitle = $currentMatch.gameTitle;
+  let localBo = $currentMatch.bestOfId;
 
   let error = '';
 </script>
@@ -60,15 +61,16 @@
           <p class="text-red-400">BO Format</p>
           <BoSelect
             {bos}
-            selectedBo={$currentMatch.bestOfId}
-            on:boUpdate={(e) => ($currentMatch.bestOfId = e.detail)}
+            bind:selectedBo={localBo}
             class="mt-5"
           />
         </div>
         <div class="mt-5">
           <p class="text-red-400">Game title</p>
           <Input type="text" bind:value={localTitle} class="mt-5" />
-          <Button on:click={() => ($currentMatch.gameTitle = localTitle)}>Change</Button>
+        </div>
+        <div class="mt-5">
+          <Button on:click={() => {$currentMatch.gameTitle = localTitle; $currentMatch.bestOfId = localBo;}}>Change</Button>
         </div>
       </TabItem>
     </Tabs>
