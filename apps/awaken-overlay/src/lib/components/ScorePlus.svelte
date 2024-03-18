@@ -1,10 +1,17 @@
 <script lang="ts">
 	import { Spinner } from 'flowbite-svelte';
 	import { Button, ButtonGroup } from 'flowbite-svelte';
+    import { createEventDispatcher } from 'svelte';
 
 	export let score: number;
 	export let isLoading: boolean;
-	export let teamUpdate: (toAdd: number) => void;
+	const dispatch = createEventDispatcher<{
+		scoreUpdate: number;
+	}>();
+
+	$: {
+		dispatch("scoreUpdate", score)
+	}
 </script>
 
 <div class={`text-center ${$$props.class}`}>
@@ -17,8 +24,8 @@
 	<div>
 		{#if !isLoading}
 			<ButtonGroup>
-				<Button pill color="red" on:click={() => teamUpdate(-1)}>-</Button>
-				<Button pill color="green" on:click={() => teamUpdate(1)}>+</Button>
+				<Button pill color="red" on:click={() => {if(score == 0) return; score-=1}}>-</Button>
+				<Button pill color="green" on:click={() => score+=1}>+</Button>
 			</ButtonGroup>
 		{:else}
 			<Spinner />

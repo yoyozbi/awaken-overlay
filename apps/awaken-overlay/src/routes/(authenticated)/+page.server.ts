@@ -4,11 +4,13 @@ import {
 	getCurrentMatch,
 	type CurrentMatchWithTeams
 } from '$lib/currentMatch.model.server';
-import type { Team } from '@prisma/client';
+import type { BestOf, Team } from '@prisma/client';
+import { getBos } from '$lib/bestof.model.server';
 
 export const load = (async () => {
 	return {
 		currentMatch: await getCurrentMatch(),
-		teams: await getTeams()
-	} satisfies { currentMatch: CurrentMatchWithTeams; teams: Team[] };
+		teams: await getTeams(),
+		bos: await getBos() 
+	} satisfies { currentMatch: CurrentMatchWithTeams; teams: Team[], bos: BestOf[] };
 }) satisfies PageServerLoad;

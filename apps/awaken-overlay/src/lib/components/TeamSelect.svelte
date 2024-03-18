@@ -1,33 +1,29 @@
 <script lang="ts">
-	import { Select, Spinner } from 'flowbite-svelte';
-	import type { CurrentMatch, Team } from '@prisma/client';
-	import { createEventDispatcher } from 'svelte';
-    import { string } from 'yup';
+  import { Select } from 'flowbite-svelte';
+  import type { Team } from '@prisma/client';
+  import { createEventDispatcher } from 'svelte';
 
-	const dispatch = createEventDispatcher<{
-		teamUpdate: string;
-	}>();
+  const dispatch = createEventDispatcher<{
+    teamUpdate: string;
+  }>();
 
-	export let teams: Team[];
-	export let selectedTeam: string;
+  export let teams: Team[];
+  export let selectedTeam: string;
 
-	let formatedTeams = teams.map((team) => {
-		return {
-			value: team.id,
-			name: team.name
-		};
-	});
-
-	const handleChange = (e: Event) => {
-		let val = (e.target as HTMLSelectElement).value;
-		dispatch('teamUpdate', val);
-	};
+  let formatedTeams = teams.map((team) => {
+    return {
+      value: team.id,
+      name: team.name
+    };
+  });
+  $: {
+    dispatch('teamUpdate', selectedTeam);
+  }
 </script>
 
 <Select
-	class={`dark:text-white dark:focus:border-white dark:focus:bg-black ${$$props.class}`}
-	items={formatedTeams}
-	bind:value={selectedTeam}
-	on:change={handleChange}
-	underline
+  class={`dark:text-white dark:focus:border-white dark:focus:bg-black ${$$props.class}`}
+  items={formatedTeams}
+  bind:value={selectedTeam}
+  underline
 />

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "CurrentMatch" ADD COLUMN     "gameTitle" TEXT NOT NULL DEFAULT 'SPRING SPLIT PLAYOFFS - BO7';
