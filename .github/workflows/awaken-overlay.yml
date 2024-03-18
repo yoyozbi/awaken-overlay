@@ -7,6 +7,9 @@ on:
       - "apps/awaken-overlay/**/*"
       - "packages/**/*"
       - ".github/workflows/**/*"
+      - "pnpm-*.yaml"
+      - "package.json"
+      - "turbo.json"
 
 env:
   REGISTRY: ghcr.io
