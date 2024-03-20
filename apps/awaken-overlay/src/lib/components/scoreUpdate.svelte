@@ -77,8 +77,7 @@
         <div class="mt-5">
           <Button
             on:click={() => {
-              changeElement('gameTitle', localTitle);
-              changeElement('bestOfId', localBo);
+              dispatch('scoreUpdate', localMatch);
             }}>Change</Button
           >
         </div>
