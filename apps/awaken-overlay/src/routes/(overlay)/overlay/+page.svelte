@@ -64,7 +64,12 @@
           <div class="score-box {reverse < $gameStore.serie.team1Score ? 'filled' : ''}" />
         {/each}
       </div>
-      <div class="text"><p>{$gameStore.game.title} <span style="font-weight: bold;">{$gameStore.serie.name.toUpperCase()}</span></p></div>
+      <div class="text">
+        <p>
+          {$gameStore.game.title}
+          <span style="font-weight: bold;">{$gameStore.serie.name.toUpperCase()}</span>
+        </p>
+      </div>
       <div class="score-boxes">
         {#each Array.from({ length: $gameStore.serie.nbOfMatch }, (_, index) => index) as game}
           <div class="score-box {game < $gameStore.serie.team2Score ? 'filled' : ''}" />
@@ -115,6 +120,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-top: 5px;
   }
   p {
     margin: 0px;
