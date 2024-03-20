@@ -16,14 +16,12 @@
       name: team.name
     };
   });
-  $: {
-    dispatch('teamUpdate', selectedTeam);
-  }
 </script>
 
 <Select
   class={`dark:text-white dark:focus:border-white dark:focus:bg-black ${$$props.class}`}
   items={formatedTeams}
   bind:value={selectedTeam}
+  on:change={(e) => dispatch('teamUpdate', selectedTeam)}
   underline
 />

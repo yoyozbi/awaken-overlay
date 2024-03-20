@@ -1,29 +1,46 @@
 <script lang="ts">
   import type { PageServerData } from './$types';
-  import { currentMatch } from '$lib/stores/currentMatchStore';
   import ScoreUpdate from '$lib/components/scoreUpdate.svelte';
-  import { setContext } from 'svelte';
+  import { onMount } from 'svelte';
   import { trpc } from '$lib/trpc/client';
   import Notifications from '$lib/components/Notifications.svelte';
+  import type { CurrentMatch } from '@prisma/client';
 
   export let data: PageServerData;
-
-  $: if ($currentMatch) {
-    $currentMatch = data.currentMatch;
-  }
-  setContext('currentMatch', currentMatch);
 
   const client = trpc();
 
   let error = '';
-  let isSuccess = false;
+  let success = '';
+  let ignore = false;
 
-  const handleUpdate = async () => {
+  let match: Omit<CurrentMatch, 'createdAt' | 'updatedAt'>;
+
+  onMount(() => {
+    client.currentTeamUpdate.subscribe(undefined, {
+      onData(newData) {
+        if (ignore) {
+          ignore = false;
+          return;
+        }
+        console.log('newData', newData);
+        match = newData;
+        success = 'Received new data';
+      }
+    });
+
+    client.getCurrentMatch.query().then((newData) => {
+      match = newData;
+    });
+  });
+
+  const handleUpdate = async (e: CustomEvent<Omit<CurrentMatch, 'createdAt' | 'updatedAt'>>) => {
     try {
-      await client.updateCurrentMatch.mutate($currentMatch);
-      isSuccess = true;
+      ignore = true;
+      await client.updateCurrentMatch.mutate(e.detail);
+      success = 'Updated';
       setTimeout(() => {
-        isSuccess = false;
+        success = '';
       }, 2000);
     } catch (e) {
       console.error(e);
@@ -33,6 +50,11 @@
 </script>
 
 <div>
-  <ScoreUpdate on:scoreUpdate={handleUpdate} teams={data.teams} bos={data.bos} />
-  <Notifications {error} success={isSuccess ? 'Updated !' : undefined} />
+  <ScoreUpdate
+    on:scoreUpdate={(e) => handleUpdate(e)}
+    teams={data.teams}
+    bos={data.bos}
+    localMatch={match}
+  />
+  <Notifications {error} {success} />
 </div>
