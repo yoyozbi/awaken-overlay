@@ -37,3 +37,9 @@ jobs:
 
       - name: Build and push Docker image
         run: docker buildx build --platform linux/amd64,linux/arm64 -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} -f apps/awaken-overlay/Dockerfile --push .
+
+      - name:  redeploy on cluster
+        uses: dkershner6/post-api-call-action@v2
+        with:
+          url: ${{ secrets.API_URL }}
+          headers: "{\"Authorization\": \"Bearer ${{ secrets.API_KEY }}\"}"
