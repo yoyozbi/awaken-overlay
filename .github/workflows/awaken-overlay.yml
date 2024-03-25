@@ -43,6 +43,4 @@ jobs:
         with:
           url: ${{ secrets.API_URL }}
           method: 'POST'
-          username: ${{ secrets.API_USER }}
-          password: ${{ secrets.API_PASSWORD }}
-          customHeaders: '{"Content-Type": "application/json"}'
+          bearerToken: ${{ secrets.API_KEY }}
