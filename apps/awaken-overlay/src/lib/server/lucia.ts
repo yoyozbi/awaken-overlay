@@ -16,12 +16,13 @@ export const lucia = new Lucia(adapter, {
 			updatedAt: attributes.updatedAt
 		}
 	},
-	sessionExpiresIn: new TimeSpan(30, "d"),
+	sessionExpiresIn: new TimeSpan(20, "w"),
 	sessionCookie: {
 		expires: false,
 		name: "user_sesion",
 		attributes: {
-			sameSite: "strict"
+			sameSite: "strict",
+			secure: env.NODE_ENV === "production"
 		}
 	}
 });
