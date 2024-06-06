@@ -1,0 +1,30 @@
+
+
+on:
+  pull_request:
+    paths:
+      - "apps/awaken-overlay/**/*"
+      - "packages/**/*"
+      - ".github/workflows/**/*"
+      - "pnpm-*.yaml"
+      - "package.json"
+      - "turbo.json"
+
+env:
+  IMAGE_NAME: ${{ github.repository_owner }}/awaken-overlay
+
+jobs:
+  awaken-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build  Docker image
+        run: docker buildx build --platform linux/amd64,linux/arm64 -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} -f apps/awaken-overlay/Dockerfile .
