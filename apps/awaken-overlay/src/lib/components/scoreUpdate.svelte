@@ -47,7 +47,7 @@
             {teams}
             selectedTeam={localMatch.team1Id}
             on:teamUpdate={(e) => changeElement('team1Id', e.detail)}
-            class="mt-5 max-w-12"
+            class="mt-5"
           />
         </div>
         <div class="mt-5">
