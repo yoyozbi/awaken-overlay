@@ -17,8 +17,13 @@
       pkgs = import nixpkgs {
         inherit system;
       };
+			turbo = pkgs.turbo.overrideAttrs (drv: rec {
+						version= "2.0.1";
+				});
+
     in {
       devShells.default = pkgs.mkShell {
+				
         buildInputs = with pkgs; [
           nodejs_18
           
@@ -30,13 +35,16 @@
 
           nodePackages.typescript
           nodePackages.typescript-language-server
+					prisma-engines
+        ] ++ [
 					turbo
-        ];
+				];
           shellHook = ''
         			  export PRISMA_QUERY_ENGINE_LIBRARY=${pkgs.prisma-engines}/lib/libquery_engine.node
                 export PRISMA_QUERY_ENGINE_BINARY=${pkgs.prisma-engines}/bin/query-engine
                 export PRISMA_SCHEMA_ENGINE_BINARY=${pkgs.prisma-engines}/bin/schema-engine
-								export TURBO_BINARY_PATH="${pkgs.turbo}/bin/turbo"
+                export PRISMA_INTROSPECTION_ENGINE_BINARY=${pkgs.prisma-engines}/bin/introspection-engine
+#								export TURBO_BINARY_PATH="${turbo}/bin/turbo"
           '';
 			};
     });
