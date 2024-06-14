@@ -2,7 +2,7 @@ FROM node:lts-alpine AS base
 RUN apk add --no-cache curl libc6-compat python3
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash -
+RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh -
 
 FROM base AS builder
 WORKDIR /app
