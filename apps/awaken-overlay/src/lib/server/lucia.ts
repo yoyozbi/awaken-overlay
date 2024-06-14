@@ -2,7 +2,7 @@ import { Lucia, TimeSpan, generateId } from 'lucia';
 import { PrismaAdapter } from '@lucia-auth/adapter-prisma';
 import db from '../db.server';
 import { env } from '$env/dynamic/private';
-import { building } from '$app/environment';
+import { building, dev } from '$app/environment';
 import { Argon2id } from "oslo/password";
 
 const adapter = new PrismaAdapter(db.authSession, db.authUser);
@@ -18,10 +18,9 @@ export const lucia = new Lucia(adapter, {
 	},
 	sessionExpiresIn: new TimeSpan(20, "w"),
 	sessionCookie: {
-		expires: false,
 		name: "user_sesion",
 		attributes: {
-			secure: env.NODE_ENV === "production"
+			secure: !dev
 		}
 	}
 });
