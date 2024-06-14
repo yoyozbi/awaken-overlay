@@ -2,7 +2,7 @@ FROM node:lts-alpine AS base
 RUN apk add --no-cache curl libc6-compat python3
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash -
 
 FROM base AS builder
 WORKDIR /app
@@ -32,12 +32,6 @@ COPY --from=installer /app/apps/awaken-overlay/package.json ./apps/awaken-overla
 COPY --from=installer /app/apps/awaken-overlay/wsServer.js ./apps/awaken-overlay/
 COPY --from=installer /app/apps/awaken-overlay/prisma/ ./apps/awaken-overlay/prisma/
 COPY --from=installer /app/apps/awaken-overlay/scripts/ ./apps/awaken-overlay/scripts/
-#COPY --from=installer /app/apps/awaken-overlay/wsServer.js .
-#COPY --from=installer /app/apps/awaken-overlay/node_modules ./node_modules
-#COPY --from=installer /app/apps/awaken-overlay/.svelte-kit ./svelte-kit
-#COPY --from=installer /app/apps/awaken-overlay/prisma ./prisma
-#COPY --from=installer /app/apps/awaken-overlay/scripts ./scripts
-
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod 
 
 WORKDIR /app/apps/awaken-overlay
