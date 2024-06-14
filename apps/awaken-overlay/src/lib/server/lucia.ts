@@ -21,7 +21,6 @@ export const lucia = new Lucia(adapter, {
 		expires: false,
 		name: "user_sesion",
 		attributes: {
-			sameSite: "strict",
 			secure: env.NODE_ENV === "production"
 		}
 	}
