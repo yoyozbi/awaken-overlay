@@ -1,9 +1,10 @@
 FROM node:lts AS base
+RUN apt-get update && apt-get install  curl libc6-dev python3
+RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.1.8"
+RUN export PATH="$HOME/.bun/bin:$PATH"
 
 FROM base AS builder
 WORKDIR /app
-RUN apt-get update && apt-get install  curl libc6-dev python3
-RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.1.8"
 RUN bun add -g turbo
 COPY . .
 RUN turbo prune --scope=awaken-overlay --docker
@@ -11,7 +12,7 @@ RUN turbo prune --scope=awaken-overlay --docker
 FROM base AS installer
 WORKDIR /app
 COPY --from=builder /app/out/full/ .
-COPY --from=builder /app/out/bun.lock .
+COPY --from=builder /app/out/bun.lockb .
 RUN bun install --frozen-lockfile 
 # Build
 RUN bun run build --filter=awaken-overlay
