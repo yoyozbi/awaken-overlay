@@ -14,5 +14,9 @@
     "prettier-plugin-svelte": "^3.2.3",
     "turbo": "latest"
   },
-  "packageManager": "pnpm@8.15.3"
+	"workspaces": [
+		"packages/*",
+		"apps/*"
+	],
+  "packageManager": "bun@1.1.8"
 }

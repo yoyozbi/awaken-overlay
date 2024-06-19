@@ -1,20 +1,16 @@
-FROM node:lts-alpine AS base
-RUN apk add --no-cache curl libc6-compat python3
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh -
+FROM oven/bun:1 AS base
 
 FROM base AS builder
 WORKDIR /app
-RUN yarn global add turbo
+RUN bun add -g turbo
 COPY . .
 RUN turbo prune --scope=awaken-overlay --docker
 
 FROM base AS installer
 WORKDIR /app
 COPY --from=builder /app/out/full/ .
-COPY --from=builder /app/out/pnpm-lock.yaml .
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+COPY --from=builder /app/out/bun.lock .
+RUN bun install --frozen-lockfile 
 # Build
 RUN pnpm turbo run build --filter=awaken-overlay
 
@@ -32,8 +28,8 @@ COPY --from=installer /app/apps/awaken-overlay/package.json ./apps/awaken-overla
 COPY --from=installer /app/apps/awaken-overlay/wsServer.js ./apps/awaken-overlay/
 COPY --from=installer /app/apps/awaken-overlay/prisma/ ./apps/awaken-overlay/prisma/
 COPY --from=installer /app/apps/awaken-overlay/scripts/ ./apps/awaken-overlay/scripts/
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod 
+RUN bun install --frozen-lockfile --production
 
 WORKDIR /app/apps/awaken-overlay
 
-CMD ["npm", "start"]
+CMD ["bun", "start"]

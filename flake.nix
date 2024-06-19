@@ -22,7 +22,7 @@
         buildInputs = with pkgs; [
           nodejs_18
           
-          nodePackages.pnpm
+          bun
 
 					nodePackages.prisma
 					postgresql_15
