@@ -1,10 +1,10 @@
 FROM node:lts AS base
 RUN apt-get update && apt-get install  curl libc6-dev python3
-RUN yarn add -g bun
+RUN yarn global add bun
 
 FROM base AS builder
 WORKDIR /app
-RUN yarn add -g turbo
+RUN yarn global add turbo
 COPY . .
 RUN turbo prune --scope=awaken-overlay --docker
 
