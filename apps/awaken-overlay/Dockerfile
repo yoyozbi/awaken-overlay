@@ -1,7 +1,6 @@
 FROM node:lts AS base
 RUN apt-get update && apt-get install  curl libc6-dev python3
-RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.1.8"
-RUN export PATH="$HOME/.bun/bin:$PATH"
+RUN npm install -g bun
 
 FROM base AS builder
 WORKDIR /app
