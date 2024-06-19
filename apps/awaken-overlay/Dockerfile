@@ -12,7 +12,7 @@ COPY --from=builder /app/out/full/ .
 COPY --from=builder /app/out/bun.lock .
 RUN bun install --frozen-lockfile 
 # Build
-RUN pnpm turbo run build --filter=awaken-overlay
+RUN bun run build --filter=awaken-overlay
 
 
 FROM base AS runner
@@ -28,8 +28,8 @@ COPY --from=installer /app/apps/awaken-overlay/package.json ./apps/awaken-overla
 COPY --from=installer /app/apps/awaken-overlay/wsServer.js ./apps/awaken-overlay/
 COPY --from=installer /app/apps/awaken-overlay/prisma/ ./apps/awaken-overlay/prisma/
 COPY --from=installer /app/apps/awaken-overlay/scripts/ ./apps/awaken-overlay/scripts/
-RUN bun install --frozen-lockfile --production
+RUN bun install --forzen-lockfile --production
 
 WORKDIR /app/apps/awaken-overlay
 
-CMD ["bun", "start"]
+CMD ["bun","run", "start"]
