@@ -16,7 +16,7 @@ RUN bun install --frozen-lockfile
 RUN bun run build --filter=awaken-overlay
 
 
-FROM bun:1-distroless AS runner
+FROM oven/bun:1-alpine AS runner
 ENV NODE_ENV production
 EXPOSE 3000
 WORKDIR /app
