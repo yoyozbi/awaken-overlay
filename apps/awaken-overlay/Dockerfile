@@ -4,7 +4,7 @@ RUN npm install -g bun
 
 FROM base AS builder
 WORKDIR /app
-RUN bun add -g turbo
+RUN npm install -g turbo
 COPY . .
 RUN turbo prune --scope=awaken-overlay --docker
 
