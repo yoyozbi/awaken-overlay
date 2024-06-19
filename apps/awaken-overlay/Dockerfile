@@ -2,7 +2,8 @@ FROM node:lts-alpine AS base
 
 FROM base AS builder
 WORKDIR /app
-RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.1.8"
+RUN apk add --no-cache curl libc6-compat python3
+RUN curl -fsSL https://bun.sh/install | sh -s "bun-v1.1.8"
 RUN bun add -g turbo
 COPY . .
 RUN turbo prune --scope=awaken-overlay --docker
