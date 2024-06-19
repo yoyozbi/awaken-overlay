@@ -3,7 +3,7 @@ FROM node:lts AS base
 FROM base AS builder
 WORKDIR /app
 RUN apt-get update && apt-get install  curl libc6-dev python3
-RUN curl -fsSL https://bun.sh/install | sh -s "bun-v1.1.8"
+RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.1.8"
 RUN bun add -g turbo
 COPY . .
 RUN turbo prune --scope=awaken-overlay --docker
