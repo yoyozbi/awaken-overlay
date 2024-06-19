@@ -1,8 +1,8 @@
-FROM node:lts-alpine AS base
+FROM node:lts AS base
 
 FROM base AS builder
 WORKDIR /app
-RUN apk add --no-cache curl libc6-compat python3
+RUN apt update && apt install  curl libc6-compat python3
 RUN curl -fsSL https://bun.sh/install | sh -s "bun-v1.1.8"
 RUN bun add -g turbo
 COPY . .
