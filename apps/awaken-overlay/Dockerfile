@@ -1,7 +1,8 @@
-FROM oven/bun:1 AS base
+FROM node:lts-alpine AS base
 
 FROM base AS builder
 WORKDIR /app
+RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.1.8"
 RUN bun add -g turbo
 COPY . .
 RUN turbo prune --scope=awaken-overlay --docker
@@ -15,7 +16,7 @@ RUN bun install --frozen-lockfile
 RUN bun run build --filter=awaken-overlay
 
 
-FROM base AS runner
+FROM bun:1-alpine AS runner
 ENV NODE_ENV production
 EXPOSE 3000
 WORKDIR /app
