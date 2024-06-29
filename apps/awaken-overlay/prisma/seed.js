@@ -49,7 +49,7 @@ async function main() {
   await trySeeding('bo7', async () => {
     await db.bestOf.upsert({
       where: {
-        nbOfMatch: 5
+        nbOfMatch: 4
       },
       create: { name: 'bo7', nbOfMatch: 5 },
       update: { name: 'bo7', nbOfMatch: 5 }
