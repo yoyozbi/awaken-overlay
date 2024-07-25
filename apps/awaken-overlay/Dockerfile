@@ -1,4 +1,4 @@
-FROM node:lts-alpine AS base
+FROM node:20.15.1-alpine3.20 AS base
 RUN apk add --no-cache curl libc6-compat python3
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
