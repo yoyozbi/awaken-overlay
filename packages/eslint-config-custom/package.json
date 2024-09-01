@@ -10,7 +10,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-turbo": "latest",
     "eslint-plugin-svelte3": "^4.0.0",
-    "svelte": "^3.2.0"
+    "svelte": "^4.2.19"
   },
   "publishConfig": {
     "access": "public"
