@@ -51,7 +51,7 @@
     "@popperjs/core": "^2.11.8",
     "@prisma/client": "5.15.0",
     "@trpc/client": "^10.45.2",
-    "@trpc/server": "^10.45.2",
+    "@trpc/server": "^11.1.1",
     "@types/ws": "^8.5.10",
     "chalk": "^5.3.0",
     "classnames": "^2.5.1",
